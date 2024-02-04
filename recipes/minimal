@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+###########
+# Recipe Name: minimal
+# Description: Minimal set of configuration items useful in all development environment
+###########

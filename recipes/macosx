@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+###########
+# Recipe Name: macosx
+# Description: First time setup for macbooks
+###########
+
+./scripts/homebrew.sh install

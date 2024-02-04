@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# Globals
+RECIPE_DIR="./recipes"
+
+# functions
+function usage () {
+    echo "Usage: $0 <recipe_name>"
+}
+
+recipe="$1"
+
+if [ -z "$recipe" ]; then
+    echo "ERROR: Missing argument 'recipe'"
+    usage
+    exit 1
+fi
+
+if ! [ -r "${RECIPE_DIR}/$recipe" ]; then
+    echo "ERROR: The recipe does not exist: '$recipe'"
+    exit 1
+fi
+
+# shellcheck source=/dev/null
+source "${RECIPE_DIR}/$recipe"
