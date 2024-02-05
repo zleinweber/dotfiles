@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+###########
+# Recipe Name: codespaces
+# Description: Setup codespaces default image
+###########
+
+# setup configuration
+AUTOMATICALLY_CHOOSE_RECIPE=false
+
+# homebrew configuration
+INSTALL_HOMEBREW=false

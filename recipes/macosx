@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+###########
+# Recipe Name: macosx
+# Description: First time setup for macbooks
+###########
+
+# setup configuration
+AUTOMATICALLY_CHOOSE_RECIPE=false
+
+# homebrew configuration
+INSTALL_HOMEBREW=true
+HOMEBREW_BUNDLE_FILE="./Brewfile"
