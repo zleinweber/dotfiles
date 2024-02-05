@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+###########
+# Recipe Name: default
+# Description: Default recipe configuration
+###########
+
+# setup configuration
+AUTOCHOOSE_PLATFORM_RECIPE=true
+
+# homebrew configuration
+INSTALL_HOMEBREW=false

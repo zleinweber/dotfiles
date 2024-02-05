@@ -6,10 +6,10 @@
 # - `install` - Install homebrew if it's not already installed
 #
 
-# Globals
+## Globals ##
 HOMEBREW_INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
 
-# Functions
+## Functions ##
 function usage () {
     echo "Usage: $0 install"
 }
@@ -23,7 +23,7 @@ function install () {
     fi
 }
 
-# Main script
+## Main ##
 command="$1"
 
 if [ -z "$command" ]; then

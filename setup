@@ -1,25 +1,50 @@
 #!/usr/bin/env bash
 
-# Globals
+## Globals ##
+# Recipes
 RECIPE_DIR="./recipes"
+TARGET_RECIPE_NAME="${TARGET_RECIPE_NAME:-default}"
 
-# functions
-function usage () {
-    echo "Usage: $0 <recipe_name>"
+# Platform
+KERNEL_NAME="$(uname -s)"
+CODESPACES="${CODESPACES:-false}"
+
+## functions ##
+function source_recipe () {
+    local recipe_name="$1"
+    local recipe_path="${RECIPE_DIR}/${recipe_name}"
+
+    if [ -r "$recipe_path" ]; then
+        echo "Loading recipe: $recipe_name"
+
+        # shellcheck source=/dev/null
+        source "$recipe_path"
+    else
+        echo "ERROR: recipe is not readable '$recipe_name'"
+    fi
 }
 
-recipe="$1"
+## Main ##
+# load recipe(s)
+source_recipe "${TARGET_RECIPE_NAME}"
 
-if [ -z "$recipe" ]; then
-    echo "ERROR: Missing argument 'recipe'"
-    usage
-    exit 1
+if "${AUTOCHOOSE_PLATFORM_RECIPE}"; then
+    case $KERNEL_NAME in
+        Darwin)
+            platform_recipe="macosx"
+            ;;
+        Linux)
+            if "$CODESPACES"; then
+                platform_recipe="codespaces"
+            fi
+            ;;
+    esac
+
+    echo "Automatically detected platform recipe: '$platform_recipe'"
+    source_recipe "$platform_recipe"
 fi
 
-if ! [ -r "${RECIPE_DIR}/$recipe" ]; then
-    echo "ERROR: The recipe does not exist: '$recipe'"
-    exit 1
+# setup homebrew
+if "$INSTALL_HOMEBREW"; then
+    ./scripts/homebrew.sh install
 fi
-
-# shellcheck source=/dev/null
-source "${RECIPE_DIR}/$recipe"
