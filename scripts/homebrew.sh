@@ -4,6 +4,7 @@
 #
 # Script to run common homebrew tasks. Available commands:
 # - `install` - Install homebrew if it's not already installed
+# - `bundle` - Install packages from a Brewfile bundle
 #
 
 ## Globals ##
@@ -14,12 +15,29 @@ function usage () {
     echo "Usage: $0 install"
 }
 
-function install () {
+function check_if_brew_is_installed () {
     if command -v brew > /dev/null 2>&1; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+function install () {
+    if check_if_brew_is_installed; then
         echo "Homebrew is already installed"
     else
         echo "Installing homebrew via curl bash: $HOMEBREW_INSTALL_SCRIPT_URL"
         /bin/bash -c "$(curl -fsSL "$HOMEBREW_INSTALL_SCRIPT_URL")"   
+    fi
+}
+
+function bundle () {
+    if check_if_brew_is_installed; then
+        brew bundle
+    else
+        echo "ERROR: brew is not installed"
+        return 1
     fi
 }
 
@@ -33,6 +51,9 @@ if [ -z "$command" ]; then
 fi
 
 case $command in
+    bundle)
+        bundle
+        ;;
     install)
         install
         ;;

@@ -44,7 +44,11 @@ if "${AUTOCHOOSE_PLATFORM_RECIPE}"; then
     source_recipe "$platform_recipe"
 fi
 
-# setup homebrew
+# homebrew
 if "$INSTALL_HOMEBREW"; then
     ./scripts/homebrew.sh install
+
+    if [ -f "${HOMEBREW_BUNDLE_FILE:-}" ]; then
+        ./scripts/homebrew.sh bundle
+    fi
 fi
