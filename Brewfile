@@ -1,6 +1,3 @@
-tap "homebrew/cask"
-tap "homebrew/core"
-
 brew "bat"
 brew "coreutils"
 brew "gh"
