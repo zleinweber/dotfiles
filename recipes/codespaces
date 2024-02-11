@@ -10,3 +10,6 @@ AUTOMATICALLY_CHOOSE_RECIPE=false
 
 # homebrew configuration
 INSTALL_HOMEBREW=false
+
+# zsh
+INSTALL_OH_MY_ZSH=true

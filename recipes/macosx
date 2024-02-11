@@ -11,3 +11,6 @@ AUTOMATICALLY_CHOOSE_RECIPE=false
 # homebrew configuration
 INSTALL_HOMEBREW=true
 HOMEBREW_BUNDLE_FILE="./Brewfile"
+
+# zsh
+INSTALL_OH_MY_ZSH=true

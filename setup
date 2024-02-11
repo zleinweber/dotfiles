@@ -44,9 +44,15 @@ if "${AUTOCHOOSE_PLATFORM_RECIPE}"; then
     source_recipe "$platform_recipe"
 fi
 
+# zsh
+if "${INSTALL_OH_MY_ZSH}"; then
+    ./scripts/oh-my-zsh.sh install
+fi
+
 # homebrew
-if "$INSTALL_HOMEBREW"; then
+if "{$INSTALL_HOMEBREW}"; then
     ./scripts/homebrew.sh install
+    eval "$(/opt/homebrew/bin/brew shellenv)"
 
     if [ -f "${HOMEBREW_BUNDLE_FILE:-}" ]; then
         ./scripts/homebrew.sh bundle
