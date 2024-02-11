@@ -3,6 +3,7 @@ brew "coreutils"
 brew "gh"
 brew "grep"
 brew "neovim"
+brew "stow"
 brew "tmux"
 brew "wget"
 
