@@ -17,6 +17,13 @@ function usage () {
     echo "  install - Install specified package(s)"
 }
 
+check_if_stow_is_installed () {
+    if ! command -v stow &> /dev/null; then
+        echo "ERROR: stow is not installed"
+        exit 1
+    fi
+}
+
 function install_package () {
     local package="$1"
     local package_path="${STOW_DIR}/${package}"
@@ -48,6 +55,7 @@ fi
 case $command in
     install)
         shift
+        check_if_stow_is_installed
         install "$@"
         ;;
     *)
