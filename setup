@@ -50,7 +50,7 @@ if "${INSTALL_OH_MY_ZSH}"; then
 fi
 
 # homebrew
-if "{$INSTALL_HOMEBREW}"; then
+if "${INSTALL_HOMEBREW}"; then
     ./scripts/homebrew.sh install
     eval "$(/opt/homebrew/bin/brew shellenv)"
 

@@ -17,6 +17,10 @@ function usage () {
 }
 
 function install () {
+    if [ -d "$HOME/.oh-my-zsh" ]; then
+        echo "oh-my-zsh is already installed"
+        return
+    fi
     echo "Installing oh-my-zsh via curl bash: $ZSH_INSTALL_SCRIPT_URL"
     /bin/bash -c "$(curl -fsSL "$ZSH_INSTALL_SCRIPT_URL")"
 }
