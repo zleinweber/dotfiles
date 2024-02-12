@@ -14,3 +14,9 @@ HOMEBREW_BUNDLE_FILE="./Brewfile"
 
 # zsh
 INSTALL_OH_MY_ZSH=true
+
+# stow
+STOW_PACKAGES=(
+    zsh
+    zsh-osx
+)

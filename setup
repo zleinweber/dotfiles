@@ -58,3 +58,8 @@ if "{$INSTALL_HOMEBREW}"; then
         ./scripts/homebrew.sh bundle
     fi
 fi
+
+# stow
+if [ -n "${STOW_PACKAGES[*]:-}" ]; then
+    ./scripts/stow.sh install "${STOW_PACKAGES[@]}"
+fi
