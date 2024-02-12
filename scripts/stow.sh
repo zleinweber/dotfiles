@@ -8,6 +8,8 @@
 ## Globals ##
 STOW_DIR="${STOW_DIR:-./stow}"
 STOW_TARGET_DIR="${STOW_TARGET_DIR:-$HOME}"
+STOW_CONFLICT="${STOW_CONFLICT:-backup}"
+STOW_CONFLICTS_DIR="${STOW_CONFLICTS_DIR:-$HOME/.stow_conflicts}"
 
 ## Functions ##
 function usage () {
@@ -17,11 +19,47 @@ function usage () {
     echo "  install - Install specified package(s)"
 }
 
-check_if_stow_is_installed () {
-    if ! command -v stow &> /dev/null; then
-        echo "ERROR: stow is not installed"
-        exit 1
-    fi
+check_for_required_deps () {
+    local deps=("$@")
+    for d in "${deps[@]}"; do
+        if ! command -v "$d" &> /dev/null; then
+            echo "ERROR: $d is not installed"
+            exit 1
+        fi
+    done
+}
+
+function manage_package_conflicts () {
+    local package="$1"
+    local conflicts_dir="${STOW_CONFLICTS_DIR}/${package}"
+    local package_path="${STOW_DIR}/${package}"
+
+    for package_file in $(/usr/bin/find "$package_path" -mindepth 1 -type f); do
+        file_rel_path="${package_file#$package_path/}"
+        file_install_path="${STOW_TARGET_DIR}/${file_rel_path}"
+        file_backup_path="${conflicts_dir}/${file_rel_path}"
+        file_backup_dir=$(dirname "$file_backup_path")
+
+        if [ -e "$file_install_path" ]; then
+            if [ "$STOW_CONFLICT" == "backup" ]; then
+                echo "Backup conflict: '$file_install_path' -> '$file_backup_path'"
+                mkdir -p "$file_backup_dir"
+                mv "$file_install_path" "$file_backup_path"
+            elif [ "$STOW_CONFLICT" == "overwrite" ]; then
+                echo "Overwriting conflict: $file_install_path"
+                rm -f "$file_install_path"
+            else
+                echo "Skipping conflict: $file_install_path"
+            fi
+        fi
+    done
+}
+
+function manage_conflicts () {
+    local packages=("$@")
+    for package in "${packages[@]}"; do
+        manage_package_conflicts "$package"
+    done
 }
 
 function install_package () {
@@ -32,7 +70,7 @@ function install_package () {
         echo "Installing package: $package"
         stow --dir="$STOW_DIR" --target="$STOW_TARGET_DIR" "$package"
     else
-        echo "ERROR: package not found '$package'"
+        echo "WARNING: package not found '$package'"
     fi
 }
 
@@ -55,7 +93,8 @@ fi
 case $command in
     install)
         shift
-        check_if_stow_is_installed
+        check_for_required_deps stow find
+        manage_conflicts "$@"
         install "$@"
         ;;
     *)
