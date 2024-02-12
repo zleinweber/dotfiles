@@ -1,11 +1,12 @@
-tap "homebrew/cask"
-tap "homebrew/core"
-
+brew "atuin"
 brew "bat"
 brew "coreutils"
 brew "gh"
 brew "grep"
 brew "neovim"
+brew "poetry"
+brew "python@3.12"
+brew "stow"
 brew "tmux"
 brew "wget"
 

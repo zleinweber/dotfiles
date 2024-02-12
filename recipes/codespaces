@@ -13,3 +13,9 @@ INSTALL_HOMEBREW=false
 
 # zsh
 INSTALL_OH_MY_ZSH=true
+
+# stow
+STOW_PACKAGES=(
+    zsh
+    zsh-codespace
+)
