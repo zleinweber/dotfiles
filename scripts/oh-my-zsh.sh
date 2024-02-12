@@ -21,15 +21,6 @@ function install () {
     /bin/bash -c "$(curl -fsSL "$ZSH_INSTALL_SCRIPT_URL")"
 }
 
-function set_zsh_as_default () {
-    if [ "$SHELL" = "$(command -v zsh)" ]; then
-        echo "zsh is already the default shell"
-    else
-        echo "Setting zsh as the default shell"
-        chsh -s "$(command -v zsh)"
-    fi
-}
-
 ## Main ##
 command="$1"
 
@@ -42,7 +33,6 @@ fi
 case $command in
     install)
         install
-        set_zsh_as_default
         ;;
     *)
         echo "ERROR: Invalid command '$command'"
