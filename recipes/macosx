@@ -5,8 +5,14 @@
 # Description: First time setup for macbooks
 ###########
 
-# setup configuration
-AUTOMATICALLY_CHOOSE_RECIPE=false
+# Recipe configuration
+AUTOCHOOSE_PLATFORM_RECIPE=false
+
+# APT packages
+APT_CLEAN=false
+APT_INSTALL_PACKAGES=()
+APT_REMOVE_PACKAGES=()
+APT_UPGRADE=false
 
 # homebrew configuration
 INSTALL_HOMEBREW=true
