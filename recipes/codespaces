@@ -5,8 +5,23 @@
 # Description: Setup codespaces default image
 ###########
 
-# setup configuration
-AUTOMATICALLY_CHOOSE_RECIPE=false
+# Recipe configuration
+AUTOCHOOSE_PLATFORM_RECIPE=false
+
+# APT packages
+APT_CLEAN=true
+APT_INSTALL_PACKAGES=(
+    bat
+    curl
+    git
+    jq
+    shellcheck
+    stow
+    wget
+    zsh
+)
+APT_REMOVE_PACKAGES=()
+APT_UPGRADE=true
 
 # homebrew configuration
 INSTALL_HOMEBREW=false

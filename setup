@@ -49,6 +49,23 @@ if "${INSTALL_OH_MY_ZSH}"; then
     ./scripts/oh-my-zsh.sh install
 fi
 
+# apt
+if [ -n "${APT_INSTALL_PACKAGES[*]:-}" ]; then
+    ./scripts/apt.sh install "${APT_INSTALL_PACKAGES[@]}"
+fi
+
+if [ -n "${APT_REMOVE_PACKAGES[*]:-}" ]; then
+    ./scripts/apt.sh remove "${APT_INSTALL_PACKAGES[@]}"
+fi
+
+if "${APT_UPGRADE}"; then
+    ./scripts/apt.sh upgrade
+fi
+
+if "${APT_CLEAN}"; then
+    ./scripts/apt.sh clean
+fi
+
 # homebrew
 if "${INSTALL_HOMEBREW}"; then
     ./scripts/homebrew.sh install

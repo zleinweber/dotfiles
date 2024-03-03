@@ -5,11 +5,20 @@
 # Description: Default recipe configuration
 ###########
 
-# setup configuration
+# Recipe configuration
 AUTOCHOOSE_PLATFORM_RECIPE=true
+
+# APT packages
+APT_CLEAN=false
+APT_INSTALL_PACKAGES=()
+APT_REMOVE_PACKAGES=()
+APT_UPGRADE=false
 
 # homebrew configuration
 INSTALL_HOMEBREW=false
 
 # zsh
-INSTALL_OH_MY_ZSH=true
+INSTALL_OH_MY_ZSH=false
+
+# stow
+STOW_PACKAGES=()
