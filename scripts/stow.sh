@@ -13,7 +13,7 @@ STOW_CONFLICTS_DIR="${STOW_CONFLICTS_DIR:-$HOME/.stow_conflicts}"
 
 ## Functions ##
 function usage () {
-    echo "Usage: $0 <package>..."
+    echo "Usage: $0 install <package...>"
     echo ""
     echo "Commands:"
     echo "  install - Install specified package(s)"
