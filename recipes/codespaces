@@ -23,6 +23,9 @@ APT_INSTALL_PACKAGES=(
 APT_REMOVE_PACKAGES=()
 APT_UPGRADE=true
 
+# atuin
+INSTALL_ATUIN=true
+
 # homebrew configuration
 INSTALL_HOMEBREW=false
 
@@ -31,6 +34,7 @@ INSTALL_OH_MY_ZSH=true
 
 # stow
 STOW_PACKAGES=(
+    atuin
     zsh
     zsh-codespace
 )
