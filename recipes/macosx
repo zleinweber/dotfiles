@@ -15,7 +15,7 @@ APT_REMOVE_PACKAGES=()
 APT_UPGRADE=false
 
 # atuin
-INSTALL_ATUIN=false
+INSTALL_ATUIN=false # Atuin is installed via brew
 
 # homebrew configuration
 INSTALL_HOMEBREW=true
