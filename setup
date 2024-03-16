@@ -45,6 +45,9 @@ if "${AUTOCHOOSE_PLATFORM_RECIPE}"; then
 fi
 
 # zsh
+mkdir -p "$HOME/.zshrc.d"
+mkdir -p "$HOME/.local/share/zsh/completions"
+
 if "${INSTALL_OH_MY_ZSH}"; then
     ./scripts/oh-my-zsh.sh install
 fi
