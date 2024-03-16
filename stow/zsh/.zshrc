@@ -10,6 +10,9 @@ HIST_STAMPS="yyyy-mm-dd"
 # atuin history
 if command -v atuin > /dev/null 2>&1; then
     eval "$(atuin init zsh)"
+    if [ -n "${ATUIN_USERNAME}" ] && [ -n "${ATUIN_PASSWORD}" ] && [ -n "${ATUIN_KEY}" ]; then
+        atuin login --username "${ATUIN_USERNAME}" --password "${ATUIN_PASSWORD}" --key "${ATUIN_KEY}"
+    fi
 fi
 
 ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
