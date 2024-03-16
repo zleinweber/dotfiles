@@ -26,6 +26,7 @@ INSTALL_OH_MY_ZSH=true
 
 # stow
 STOW_PACKAGES=(
+    atuin
     zsh
     zsh-osx
 )
