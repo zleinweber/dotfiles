@@ -80,3 +80,8 @@ fi
 if [ -n "${STOW_PACKAGES[*]:-}" ]; then
     ./scripts/stow.sh install "${STOW_PACKAGES[@]}"
 fi
+
+# atuin
+if [ -n "${INSTALL_ATUIN}" ]; then
+    ./scripts/atuin.sh install
+fi

@@ -14,6 +14,9 @@ APT_INSTALL_PACKAGES=()
 APT_REMOVE_PACKAGES=()
 APT_UPGRADE=false
 
+# atuin
+INSTALL_ATUIN=false
+
 # homebrew configuration
 INSTALL_HOMEBREW=true
 HOMEBREW_BUNDLE_FILE="./Brewfile"
