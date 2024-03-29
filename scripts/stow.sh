@@ -41,6 +41,14 @@ function manage_package_conflicts () {
         file_backup_dir=$(dirname "$file_backup_path")
 
         if [ -e "$file_install_path" ]; then
+            file_install_realpath=$(realpath "$file_install_path")
+            file_package_realpath=$(realpath "$package_file")
+
+            if [ "$file_install_realpath" == "$file_package_realpath" ]; then
+                echo "File already installed from stow pacakge: $file_install_path"
+                continue
+            fi
+
             if [ "$STOW_CONFLICT" == "backup" ]; then
                 echo "Backup conflict: '$file_install_path' -> '$file_backup_path'"
                 mkdir -p "$file_backup_dir"
