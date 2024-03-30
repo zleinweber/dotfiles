@@ -1,2 +1,3 @@
 # dotfiles
-Development environment easy mode
+
+Zach Leinweber's dotfile repository.
