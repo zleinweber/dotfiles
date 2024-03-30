@@ -29,4 +29,5 @@ STOW_PACKAGES=(
     atuin
     zsh
     zsh-osx
+    gitconfig-osx
 )
