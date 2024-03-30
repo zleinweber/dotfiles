@@ -8,7 +8,7 @@ if command -v atuin > /dev/null 2>&1; then
     if [ -n "${ZSH_LOCAL_COMPLETIONS}" ]; then
         mkdir -p "${ZSH_LOCAL_COMPLETIONS}"
         if ! [ -f "${ZSH_LOCAL_COMPLETIONS}/_atuin" ]; then
-            atuin completions --shell zsh --out-dir "${ZSH_LOCAL_COMPLETIONS}"
+            atuin gen-completions --shell zsh --out-dir "${ZSH_LOCAL_COMPLETIONS}"
         fi
     fi
 fi
