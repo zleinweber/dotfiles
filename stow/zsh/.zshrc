@@ -6,16 +6,12 @@ HISTSIZE=10000
 SAVEHIST=10000
 HIST_STAMPS="yyyy-mm-dd"
 
-ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
-
 export ZSH_LOCAL_COMPLETIONS=$HOME/.local/share/zsh/completions
 if [ -d $ZSH_LOCAL_COMPLETIONS ]; then
-    fpath=($ZSH_LOCAL_COMPLETIONS $fpath)
+   fpath=($ZSH_LOCAL_COMPLETIONS $fpath)
 fi
 
 ZDOTIFLE=$HOME/.zshrc.d
 for file in $ZDOTIFLE/*.zsh; do
-    source $file
+   source $file
 done
-
-source $ZSH/oh-my-zsh.sh
