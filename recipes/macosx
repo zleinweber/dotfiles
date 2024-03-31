@@ -27,7 +27,8 @@ INSTALL_OH_MY_ZSH=true
 # stow
 STOW_PACKAGES=(
     atuin
+    gitconfig-osx
+    kitty
     zsh
     zsh-osx
-    gitconfig-osx
 )
