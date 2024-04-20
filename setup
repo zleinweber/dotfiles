@@ -38,12 +38,12 @@ function source_recipe () {
     local recipe_path="${RECIPE_DIR}/${recipe_name}"
 
     if [ -r "$recipe_path" ]; then
-        echo "Loading recipe: $recipe_name"
+        echo_info "Loading recipe '$recipe_name'"
 
         # shellcheck source=/dev/null
         source "$recipe_path"
     else
-        echo "ERROR: recipe is not readable '$recipe_name'"
+        echo_error "Recipe '$recipe_name' does not exist or is not readable"
     fi
 }
 
