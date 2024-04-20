@@ -17,6 +17,7 @@ function usage () {
     echo ""
     echo "Commands:"
     echo "  install - Install specified package(s)"
+    echo "  remove  - Remove specified package(s)"
 }
 
 check_for_required_deps () {
@@ -108,6 +109,11 @@ case $command in
         check_for_required_deps stow find
         manage_conflicts "$@"
         install "$@"
+        ;;
+    remove)
+        shift
+        check_for_required_deps stow
+        stow --dir="$STOW_DIR" --target="$STOW_TARGET_DIR" -D "$@"
         ;;
     *)
         echo "ERROR: Invalid command '$command'"
