@@ -4,6 +4,8 @@
 ZSH_INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
 
 ## Functions ##
+source ./scripts/common.sh
+
 function usage () {
     echo "Usage: $0 install|help"
     echo ""
@@ -16,10 +18,10 @@ function usage () {
 
 function install () {
     if [ -d "$HOME/.oh-my-zsh" ]; then
-        echo "oh-my-zsh is already installed"
+        echo_info "oh-my-zsh is already installed"
         return
     fi
-    echo "Installing oh-my-zsh via curl bash: $ZSH_INSTALL_SCRIPT_URL"
+    echo_info "Installing oh-my-zsh via curl bash: $ZSH_INSTALL_SCRIPT_URL"
     /bin/bash -c "$(curl -fsSL "$ZSH_INSTALL_SCRIPT_URL")"
 }
 
@@ -27,7 +29,7 @@ function install () {
 command="$1"
 
 if [ -z "$command" ]; then
-    echo "ERROR: Missing argument 'command'"
+    echo_error "Missing argument 'command'"
     usage
     exit 1
 fi
@@ -40,7 +42,7 @@ case $command in
         usage
         ;;
     *)
-        echo "ERROR: Invalid command '$command'"
+        echo_error "Invalid command '$command'"
         usage
         exit 1
         ;;

@@ -3,6 +3,8 @@
 export DEBIAN_FRONTEND=noninteractive
 
 ## Functions ##
+source ./scripts/common.sh
+
 function usage () {
     echo "Usage: $0 install|help"
     echo ""
@@ -23,9 +25,9 @@ function check_if_atuin_installed () {
 
 function install () {
     if check_if_atuin_installed; then
-        echo "atuin is already installed"
+        echo_info "atuin is already installed"
     else
-        echo "Installing atuin via curl bash: https://setup.atuin.sh"
+        echo_info "Installing atuin via curl bash: https://setup.atuin.sh"
         bash <(curl --proto '=https' --tlsv1.2 -sSf https://setup.atuin.sh)
     fi
 }
@@ -34,7 +36,7 @@ function install () {
 command="$1"
 
 if [ -z "$command" ]; then
-    echo "ERROR: Missing argument 'command'"
+    echo_error "Missing argument 'command'"
     usage
     exit 1
 fi
@@ -47,7 +49,7 @@ case $command in
         usage
         ;;
     *)
-        echo "ERROR: Invalid command '$command'"
+        echo_error "Invalid command '$command'"
         usage
         exit 1
 esac
