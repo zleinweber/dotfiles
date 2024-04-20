@@ -33,7 +33,7 @@ if "${AUTOCHOOSE_PLATFORM_RECIPE}"; then
 fi
 
 # zsh
-if ${ZSH}; then
+if ${SETUP_ZSH}; then
     echo_info "Setting up zsh"
 
     mkdir -p "$HOME/.zshrc.d"
@@ -45,7 +45,7 @@ if ${ZSH}; then
 fi
 
 # apt
-if "${APT}"; then
+if "${SETUP_APT}"; then
     echo_info "Setting up apt"
 
     if [ -n "${APT_INSTALL_PACKAGES[*]:-}" ]; then
