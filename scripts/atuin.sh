@@ -27,8 +27,19 @@ function install () {
     if check_if_atuin_installed; then
         echo_info "atuin is already installed"
     else
+        # Atuin installation can update your zshrc. This will be used to check of zshrc was updated.
+        tmp_dir=$(mktemp -d -t atuin-XXXXXXXXXX)
+        git diff stow/zsh/.zshrc > $tmp_dir/zshrc-diff-1
+    
         echo_info "Installing atuin via curl bash: https://setup.atuin.sh"
         bash <(curl --proto '=https' --tlsv1.2 -sSf https://setup.atuin.sh)
+
+        # Check if zshrc was updated and revert if it was
+        git diff stow/zsh/.zshrc > $tmp_dir/zshrc-diff-2
+        if ! cmp -s $tmp_dir/zshrc-diff-1 $tmp_dir/zshrc-diff-2; then
+            echo_info "Restoring ~/.zshrc"
+            git restore stow/zsh/.zshrc
+        fi
     fi
 }
 
