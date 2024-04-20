@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-## stow.sh ##
-#
-# Script to specified dotfile packages using GNU Stow
-#
-
 ## Globals ##
 STOW_DIR="${STOW_DIR:-./stow}"
 STOW_TARGET_DIR="${STOW_TARGET_DIR:-$HOME}"
@@ -13,10 +8,14 @@ STOW_CONFLICTS_DIR="${STOW_CONFLICTS_DIR:-$HOME/.stow_conflicts}"
 
 ## Functions ##
 function usage () {
-    echo "Usage: $0 install <package...>"
+    echo "Usage: $0 {install|remove} <package...> | help"
+    echo ""
+    echo "Manage stow packages"
     echo ""
     echo "Commands:"
     echo "  install - Install specified package(s)"
+    echo "  remove  - Remove specified package(s)"
+    echo "  help    - Display this help message"
 }
 
 check_for_required_deps () {
@@ -108,6 +107,17 @@ case $command in
         check_for_required_deps stow find
         manage_conflicts "$@"
         install "$@"
+        ;;
+    remove)
+        shift
+        check_for_required_deps stow
+        for package in "$@"; do
+            echo "Removing package: $package"
+            stow --dir="$STOW_DIR" --target="$STOW_TARGET_DIR" -D "$package"
+        done
+        ;;
+    help)
+        usage
         ;;
     *)
         echo "ERROR: Invalid command '$command'"

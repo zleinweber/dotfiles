@@ -10,19 +10,7 @@ KERNEL_NAME="$(uname -s)"
 CODESPACES="${CODESPACES:-false}"
 
 ## functions ##
-function source_recipe () {
-    local recipe_name="$1"
-    local recipe_path="${RECIPE_DIR}/${recipe_name}"
-
-    if [ -r "$recipe_path" ]; then
-        echo "Loading recipe: $recipe_name"
-
-        # shellcheck source=/dev/null
-        source "$recipe_path"
-    else
-        echo "ERROR: recipe is not readable '$recipe_name'"
-    fi
-}
+source scripts/common.sh
 
 ## Main ##
 # load recipe(s)
@@ -40,37 +28,47 @@ if "${AUTOCHOOSE_PLATFORM_RECIPE}"; then
             ;;
     esac
 
-    echo "Automatically detected platform recipe: '$platform_recipe'"
+    echo_info "Automatically detected platform recipe: '$platform_recipe'"
     source_recipe "$platform_recipe"
 fi
 
 # zsh
-mkdir -p "$HOME/.zshrc.d"
-mkdir -p "$HOME/.local/share/zsh/completions"
+if ${ZSH}; then
+    echo_info "Setting up zsh"
 
-if "${INSTALL_OH_MY_ZSH}"; then
-    ./scripts/oh-my-zsh.sh install
+    mkdir -p "$HOME/.zshrc.d"
+    mkdir -p "$HOME/.local/share/zsh/completions"
+
+    if "${INSTALL_OH_MY_ZSH}"; then
+        ./scripts/oh-my-zsh.sh install
+    fi
 fi
 
 # apt
-if [ -n "${APT_INSTALL_PACKAGES[*]:-}" ]; then
-    ./scripts/apt.sh install "${APT_INSTALL_PACKAGES[@]}"
-fi
+if "${APT}"; then
+    echo_info "Setting up apt"
 
-if [ -n "${APT_REMOVE_PACKAGES[*]:-}" ]; then
-    ./scripts/apt.sh remove "${APT_INSTALL_PACKAGES[@]}"
-fi
+    if [ -n "${APT_INSTALL_PACKAGES[*]:-}" ]; then
+        ./scripts/apt.sh install "${APT_INSTALL_PACKAGES[@]}"
+    fi
 
-if "${APT_UPGRADE}"; then
-    ./scripts/apt.sh upgrade
-fi
+    if [ -n "${APT_REMOVE_PACKAGES[*]:-}" ]; then
+        ./scripts/apt.sh remove "${APT_INSTALL_PACKAGES[@]}"
+    fi
 
-if "${APT_CLEAN}"; then
-    ./scripts/apt.sh clean
+    if "${APT_UPGRADE}"; then
+        ./scripts/apt.sh upgrade
+    fi
+
+    if "${APT_CLEAN}"; then
+        ./scripts/apt.sh clean
+    fi
 fi
 
 # homebrew
 if "${INSTALL_HOMEBREW}"; then
+    echo_info "Setting up homebrew"
+
     ./scripts/homebrew.sh install
     eval "$(/opt/homebrew/bin/brew shellenv)"
 
@@ -81,10 +79,14 @@ fi
 
 # stow
 if [ -n "${STOW_PACKAGES[*]:-}" ]; then
+    echo_info "Install requested dotfiles packages via stow"
+
     ./scripts/stow.sh install "${STOW_PACKAGES[@]}"
 fi
 
 # atuin
 if [ -n "${INSTALL_ATUIN}" ]; then
+    echo_info "Setting up atuin"
+
     ./scripts/atuin.sh install
 fi

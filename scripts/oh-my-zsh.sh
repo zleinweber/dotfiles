@@ -1,27 +1,27 @@
 #!/usr/bin/env bash
 
-## oh-my-zsh.sh ##
-#
-# Script to install oh-my-zsh and set zsh as the default shell
-#
-
 ## Globals ##
 ZSH_INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
 
 ## Functions ##
+source ./scripts/common.sh
+
 function usage () {
-    echo "Usage: $0 install"
+    echo "Usage: $0 install|help"
+    echo ""
+    echo "Install oh-my-zsh"
     echo ""
     echo "Commands:"
     echo "  install - Install oh-my-zsh and set zsh as the default shell"
+    echo "  help    - Display this help message"
 }
 
 function install () {
     if [ -d "$HOME/.oh-my-zsh" ]; then
-        echo "oh-my-zsh is already installed"
+        echo_info "oh-my-zsh is already installed"
         return
     fi
-    echo "Installing oh-my-zsh via curl bash: $ZSH_INSTALL_SCRIPT_URL"
+    echo_info "Installing oh-my-zsh via curl bash: $ZSH_INSTALL_SCRIPT_URL"
     /bin/bash -c "$(curl -fsSL "$ZSH_INSTALL_SCRIPT_URL")"
 }
 
@@ -29,7 +29,7 @@ function install () {
 command="$1"
 
 if [ -z "$command" ]; then
-    echo "ERROR: Missing argument 'command'"
+    echo_error "Missing argument 'command'"
     usage
     exit 1
 fi
@@ -38,8 +38,11 @@ case $command in
     install)
         install
         ;;
+    help)
+        usage
+        ;;
     *)
-        echo "ERROR: Invalid command '$command'"
+        echo_error "Invalid command '$command'"
         usage
         exit 1
         ;;
