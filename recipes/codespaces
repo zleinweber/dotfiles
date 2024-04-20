@@ -17,6 +17,7 @@ APT_INSTALL_PACKAGES=(
     jq
     shellcheck
     stow
+    tmux
     wget
     zsh
 )
@@ -36,6 +37,7 @@ INSTALL_OH_MY_ZSH=true
 STOW_PACKAGES=(
     atuin
     oh-my-zsh
+    tmux
     zsh
     zsh-codespace
 )

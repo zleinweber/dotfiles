@@ -30,6 +30,7 @@ STOW_PACKAGES=(
     gitconfig-osx
     kitty
     oh-my-zsh
+    tmux
     zsh
     zsh-osx
 )
