@@ -9,6 +9,7 @@
 AUTOCHOOSE_PLATFORM_RECIPE=false
 
 # APT packages
+APT=true
 APT_CLEAN=true
 APT_INSTALL_PACKAGES=(
     bat
