@@ -9,7 +9,7 @@
 AUTOCHOOSE_PLATFORM_RECIPE=false
 
 # APT packages
-APT=true
+SETUP_APT=true
 APT_CLEAN=true
 APT_INSTALL_PACKAGES=(
     bat
@@ -32,6 +32,7 @@ INSTALL_ATUIN=true
 INSTALL_HOMEBREW=false
 
 # zsh
+SETUP_ZSH=true
 INSTALL_OH_MY_ZSH=true
 
 # stow

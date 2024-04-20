@@ -9,7 +9,7 @@
 AUTOCHOOSE_PLATFORM_RECIPE=true
 
 # APT packages
-APT=false
+SETUP_APT=false
 APT_CLEAN=false
 APT_INSTALL_PACKAGES=()
 APT_REMOVE_PACKAGES=()
@@ -22,6 +22,7 @@ INSTALL_ATUIN=false
 INSTALL_HOMEBREW=false
 
 # zsh
+SETUP_ZSH=true
 INSTALL_OH_MY_ZSH=false
 
 # stow

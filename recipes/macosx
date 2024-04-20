@@ -9,7 +9,7 @@
 AUTOCHOOSE_PLATFORM_RECIPE=false
 
 # APT packages
-APT=false
+SETUP_APT=false
 APT_CLEAN=false
 APT_INSTALL_PACKAGES=()
 APT_REMOVE_PACKAGES=()
@@ -23,6 +23,7 @@ INSTALL_HOMEBREW=true
 HOMEBREW_BUNDLE_FILE="./Brewfile"
 
 # zsh
+SETUP_ZSH=true
 INSTALL_OH_MY_ZSH=true
 
 # stow
