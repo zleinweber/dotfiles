@@ -1,22 +1,20 @@
 #!/usr/bin/env bash
 
-## apt.sh ##
-#
-# This script installs apt packages on the system
-#
-
 ## Globals ##
 export DEBIAN_FRONTEND=noninteractive
 
 ## Functions ##
 function usage () {
-    echo "Usage: $0 install <package...>"
+    echo "Usage: $0 {install|remove} <package...> | {clean|upgrade|help}"
+    echo ""
+    echo "Managed apt packages"
     echo ""
     echo "Commands:"
-    echo "  clean - Clean apt cache and remove unused packages"
+    echo "  clean   - Clean apt cache and remove unused packages"
     echo "  install - Install apt packages"
-    echo "  remove - Remove apt packages"
+    echo "  remove  - Remove apt packages"
     echo "  upgrade - Upgrade all installed packages"
+    echo "  help    - Display this help message"
 }
 
 function check_if_apt_installed () {
@@ -79,6 +77,9 @@ case $command in
         ;;
     upgrade)
         apt_upgrade
+        ;;
+    help)
+        usage
         ;;
     *)
         echo "ERROR: Invalid command '$command'"

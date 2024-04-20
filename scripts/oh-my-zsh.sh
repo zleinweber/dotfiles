@@ -1,19 +1,17 @@
 #!/usr/bin/env bash
 
-## oh-my-zsh.sh ##
-#
-# Script to install oh-my-zsh and set zsh as the default shell
-#
-
 ## Globals ##
 ZSH_INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
 
 ## Functions ##
 function usage () {
-    echo "Usage: $0 install"
+    echo "Usage: $0 install|help"
+    echo ""
+    echo "Install oh-my-zsh"
     echo ""
     echo "Commands:"
     echo "  install - Install oh-my-zsh and set zsh as the default shell"
+    echo "  help    - Display this help message"
 }
 
 function install () {
@@ -37,6 +35,9 @@ fi
 case $command in
     install)
         install
+        ;;
+    help)
+        usage
         ;;
     *)
         echo "ERROR: Invalid command '$command'"

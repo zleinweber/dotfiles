@@ -1,19 +1,16 @@
 #!/usr/bin/env bash
 
-## atuin.sh ##
-#
-# This script install atuin via the installation script
-# See also: https://docs.atuin.sh/guide/installation/
-#
-
 export DEBIAN_FRONTEND=noninteractive
 
 ## Functions ##
 function usage () {
-    echo "Usage: $0 install"
+    echo "Usage: $0 install|help"
+    echo ""
+    echo "Install atuin (see also https://docs.atuin.sh/guide/installation/)"
     echo ""
     echo "Commands:"
     echo "  install - Install atuin"
+    echo "  help    - Display this help message"
 }
 
 function check_if_atuin_installed () {
@@ -45,6 +42,9 @@ fi
 case $command in
     install)
         install
+        ;;
+    help)
+        usage
         ;;
     *)
         echo "ERROR: Invalid command '$command'"

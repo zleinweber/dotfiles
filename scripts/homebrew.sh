@@ -1,20 +1,18 @@
 #!/usr/bin/env bash
 
-## homebrew.sh ##
-#
-# Script to run common homebrew tasks. Available commands:
-#
-
 ## Globals ##
 HOMEBREW_INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
 
 ## Functions ##
 function usage () {
-    echo "Usage: $0 install|bundle"
+    echo "Usage: $0 install|bundle|help"
+    echo ""
+    echo "Manage homebrew packages"
     echo ""
     echo "Commands:"
     echo "  install - Install homebrew if it's not already installed"
-    echo "  bundle - Install packages from a Brewfile bundle"
+    echo "  bundle  - Install packages from a Brewfile bundle"
+    echo "  help    - Display this help message"
 }
 
 function check_if_brew_is_installed () {
@@ -58,6 +56,9 @@ case $command in
         ;;
     install)
         install
+        ;;
+    help)
+        usage
         ;;
     *)
         echo "ERROR: Invalid command '$command'"
