@@ -22,9 +22,12 @@ INSTALL_ATUIN=false # Atuin is installed via brew
 INSTALL_HOMEBREW=true
 HOMEBREW_BUNDLE_FILE="./Brewfile"
 
-# zsh
-SETUP_ZSH=true
-INSTALL_OH_MY_ZSH=true
+# MACOS
+CONFIGURE_MACOS_SYSTEM=true
+SET_MACOS_HOSTNAME="${MACOS_HOSTNAME:-None}"
+
+# sudo
+SUDO_UP_FRONT=false
 
 # stow
 STOW_PACKAGES=(
@@ -36,3 +39,7 @@ STOW_PACKAGES=(
     zsh
     zsh-osx
 )
+
+# zsh
+SETUP_ZSH=true
+INSTALL_OH_MY_ZSH=true

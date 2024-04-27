@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -u
+
 ## Globals ##
 # Recipes
 RECIPE_DIR="./recipes"
@@ -32,8 +34,13 @@ if "${AUTOCHOOSE_PLATFORM_RECIPE}"; then
     source_recipe "$platform_recipe"
 fi
 
+# sudo
+if "${SUDO_UP_FRONT}"; then
+    sudo_up_front
+fi
+
 # zsh
-if ${SETUP_ZSH}; then
+if "${SETUP_ZSH}"; then
     echo_info "Setting up zsh"
 
     mkdir -p "$HOME/.zshrc.d"
@@ -89,4 +96,15 @@ if [ -n "${INSTALL_ATUIN}" ]; then
     echo_info "Setting up atuin"
 
     ./scripts/atuin.sh install
+fi
+
+# macos
+if "${CONFIGURE_MACOS_SYSTEM}"; then
+    echo_info "Configure macOS system settings"
+
+    if [ ! "${SETUP_MACOS_HOSTNAME}" == "None" ]; then
+        ./scripts/macos.sh hostname "${SETUP_MACOS_HOSTNAME}"
+    fi
+
+    ./scripts/macos.sh configure
 fi

@@ -31,9 +31,12 @@ INSTALL_ATUIN=true
 # homebrew configuration
 INSTALL_HOMEBREW=false
 
-# zsh
-SETUP_ZSH=true
-INSTALL_OH_MY_ZSH=true
+# MACOS
+CONFIGURE_MACOS_SYSTEM=false
+SET_MACOS_HOSTNAME="${MACOS_HOSTNAME:-None}"
+
+# sudo
+SUDO_UP_FRONT=false
 
 # stow
 STOW_PACKAGES=(
@@ -43,3 +46,7 @@ STOW_PACKAGES=(
     zsh
     zsh-codespace
 )
+
+# zsh
+SETUP_ZSH=true
+INSTALL_OH_MY_ZSH=true
