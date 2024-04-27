@@ -21,9 +21,12 @@ INSTALL_ATUIN=false
 # homebrew configuration
 INSTALL_HOMEBREW=false
 
+# stow
+STOW_PACKAGES=()
+
+# sudo
+SUDO_UP_FRONT=false
+
 # zsh
 SETUP_ZSH=true
 INSTALL_OH_MY_ZSH=false
-
-# stow
-STOW_PACKAGES=()

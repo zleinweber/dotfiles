@@ -37,3 +37,18 @@ function source_recipe () {
         echo_error "Recipe '$recipe_name' does not exist or is not readable"
     fi
 }
+
+function sudo_up_front () {
+    # Useful primarily for macos where we have to sudo with password
+    if [ "$(id -u)" -ne 0 ]; then
+        echo_info "Requesting sudo password to cache credentials for script run duration"
+        sudo -v
+        while true; do
+            sudo -n true
+            sleep 60
+            kill -0 "$$" || exit
+        done 2>/dev/null &
+    else
+        echo_info "Already running as root"
+    fi
+}

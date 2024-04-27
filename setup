@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -u
+
 ## Globals ##
 # Recipes
 RECIPE_DIR="./recipes"
@@ -30,6 +32,11 @@ if "${AUTOCHOOSE_PLATFORM_RECIPE}"; then
 
     echo_info "Automatically detected platform recipe: '$platform_recipe'"
     source_recipe "$platform_recipe"
+fi
+
+# sudo
+if "${SUDO_UP_FRONT}"; then
+    sudo_up_front
 fi
 
 # zsh

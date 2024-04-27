@@ -31,9 +31,8 @@ INSTALL_ATUIN=true
 # homebrew configuration
 INSTALL_HOMEBREW=false
 
-# zsh
-SETUP_ZSH=true
-INSTALL_OH_MY_ZSH=true
+# sudo
+SUDO_UP_FRONT=false
 
 # stow
 STOW_PACKAGES=(
@@ -43,3 +42,7 @@ STOW_PACKAGES=(
     zsh
     zsh-codespace
 )
+
+# zsh
+SETUP_ZSH=true
+INSTALL_OH_MY_ZSH=true
