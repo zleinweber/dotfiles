@@ -102,8 +102,8 @@ fi
 if "${CONFIGURE_MACOS_SYSTEM}"; then
     echo_info "Configure macOS system settings"
 
-    if [ ! "${SETUP_MACOS_HOSTNAME}" == "None" ]; then
-        ./scripts/macos.sh hostname "${SETUP_MACOS_HOSTNAME}"
+    if [ ! "${SET_MACOS_HOSTNAME}" == "None" ]; then
+        ./scripts/macos.sh hostname "${SET_MACOS_HOSTNAME}"
     fi
 
     ./scripts/macos.sh configure
