@@ -31,6 +31,10 @@ INSTALL_ATUIN=true
 # homebrew configuration
 INSTALL_HOMEBREW=false
 
+# MACOS
+CONFIGURE_MACOS_SYSTEM=false
+SET_MACOS_HOSTNAME="${MACOS_HOSTNAME:-None}"
+
 # sudo
 SUDO_UP_FRONT=false
 

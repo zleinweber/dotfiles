@@ -22,6 +22,10 @@ INSTALL_ATUIN=false # Atuin is installed via brew
 INSTALL_HOMEBREW=true
 HOMEBREW_BUNDLE_FILE="./Brewfile"
 
+# MACOS
+CONFIGURE_MACOS_SYSTEM=true
+SET_MACOS_HOSTNAME="${MACOS_HOSTNAME:-None}"
+
 # sudo
 SUDO_UP_FRONT=false
 

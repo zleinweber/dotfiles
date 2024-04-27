@@ -6,19 +6,50 @@ export DEBIAN_FRONTEND=noninteractive
 source ./scripts/common.sh
 
 function usage () {
-    echo "Usage: $0 defautls|hostname|help"
+    echo "Usage: $0 defaults|hostname|help"
     echo ""
     echo "Configure various MacOS System Settings in an attempt to automate as"
     echo "much of system set as possible. This is inspired by:"
     echo "  https://github.com/mathiasbynens/dotfiles/blob/master/.macos"
     echo ""
     echo "Commands:"
-    echo "  defaults - Configure MacOS settings via 'defaults'"
+    echo "  configure - Configure MacOS system settings"
     echo "  hostname - Set the macos hostname"
-    echo "  help    - Display this help message"
+    echo "  help     - Display this help message"
 }
 
-fucntion set_hostname () {
+function configure_macosx_system () {
+    ## Global Settings and Appearence ##
+    defaults write NSGlobalDomain AppleInterfaceStyleSwitchesAutomatically -bool true
+    defaults write NSGlobalDomain AppleAquaColorVariant -int 1
+    defaults write NSGlobalDomain AppleAccentColor -int 6
+    defaults write NSGlobalDomain AppleHighlightColor -string "1.000000 0.749020 0.823529 Pink"
+    defaults write NSGlobalDomain AppleShowScrollBars -string "WhenScrolling"
+    defaults write NSGlobalDomain NSQuitAlwaysKeepsWindows -bool FALSE
+    defaults write NSglobalDomain NSTableViewDefaultSizeMode -int 1
+    defaults write NSGlobalDomain com.apple.swipescrolldirection -bool FALSE
+
+    ## Dock Settings ##
+    defaults write com.apple.dock autohide -bool TRUE
+    defaults write com.apple.dock orientation -string "left"
+    defaults write com.apple.dock tilesize -int 36
+
+    ## Finder Settings ##
+    defaults write NSGlobalDomain AppleShowAllExtensions -bool TRUE
+    defaults write com.apple.finder ShowPathbar -bool TRUE
+    defaults write com.apple.finder ShowStatusBar -bool TRUE
+    defaults write com.apple.finder NewWindowTarget -string "PfHm"
+    defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/"
+    defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+    defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
+    defaults write com.apple.finder _FXSortFoldersFirst -bool true
+    defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+    defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+    defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+
+}
+
+function set_hostname () {
     local hostname="$1"
 
     if [ -z "$hostname" ]; then
@@ -61,8 +92,8 @@ if [ -z "$command" ]; then
 fi
 
 case $command in
-    defaults)
-        echo_info "NOT IMPLEMENTED: Configuring MacOS settings via 'defaults'"
+    configure)
+        configure_macosx_system
         ;;
     hostname)
         echo_info "Setting hostname"
