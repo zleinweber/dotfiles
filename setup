@@ -98,6 +98,13 @@ if [ -n "${INSTALL_ATUIN}" ]; then
     ./scripts/atuin.sh install
 fi
 
+# nvim
+if "${INSTALL_NVIM}"; then
+    echo_info "Installing the latest nvim binary release"
+
+    ./scripts/nvim.sh install
+fi
+
 # macos
 if "${CONFIGURE_MACOS_SYSTEM}"; then
     echo_info "Configure macOS system settings"
