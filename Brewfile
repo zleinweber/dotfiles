@@ -12,6 +12,7 @@ brew "tmux"
 brew "wget"
 
 cask "amethyst"
+cask "chatgpt"
 cask "discord"
 cask "docker"
 cask "github"
