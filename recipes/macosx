@@ -37,6 +37,7 @@ STOW_PACKAGES=(
     atuin
     gitconfig-osx
     kitty
+    neovim
     oh-my-zsh
     tmux
     zsh

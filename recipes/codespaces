@@ -45,6 +45,7 @@ SUDO_UP_FRONT=false
 # stow
 STOW_PACKAGES=(
     atuin
+    neovim
     oh-my-zsh
     tmux
     zsh
