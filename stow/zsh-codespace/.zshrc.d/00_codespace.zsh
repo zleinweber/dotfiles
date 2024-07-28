@@ -7,3 +7,7 @@ plugins=(
     git
     vi-mode
 )
+
+if [ -d "$HOME/.atuin/bin" ]; then
+    export PATH="$PATH:$HOME/.atuin/bin"
+fi  
