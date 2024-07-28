@@ -16,6 +16,7 @@ APT_INSTALL_PACKAGES=(
     curl
     git
     jq
+    luarocks
     shellcheck
     stow
     tmux
