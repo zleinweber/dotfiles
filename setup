@@ -3,21 +3,20 @@
 set -u
 
 ## Globals ##
-# Recipes
-RECIPE_DIR="./recipes"
+RECIPE_DIR="${RECIPE_DIR:-./recipes}"
 TARGET_RECIPE_NAME="${TARGET_RECIPE_NAME:-default}"
-AUTOCHOOSE_PLATFORM_RECIPE="${AUTOCHOOSE_PLATFORM_RECIPE:-true}"
-
-# Platform
-KERNEL_NAME="$(uname -s)"
-CODESPACES="${CODESPACES:-false}"
+SETUP_AUTOCHOOSE_RECIPE="${SETUP_AUTOCHOOSE_RECIPE:-true}"
 
 ## functions ##
 source scripts/common.sh
 
 ## Main ##
 # Load recipe
-if "${AUTOCHOOSE_PLATFORM_RECIPE}"; then
+if "${SETUP_AUTOCHOOSE_RECIPE}"; then
+    # Platform
+    KERNEL_NAME="$(uname -s)"
+    CODESPACES="${CODESPACES:-false}"
+
     case $KERNEL_NAME in
         Darwin)
             platform_recipe="macosx"
@@ -29,10 +28,10 @@ if "${AUTOCHOOSE_PLATFORM_RECIPE}"; then
             ;;
     esac
 
-    echo_info "Load automatically detected platform recipe: '$platform_recipe'"
+    echo_info "Load programmatically chosen recipe: '$platform_recipe'"
     source_recipe "$platform_recipe"
 else
-    echo_info "Load target recipe: '$TARGET_RECIPE_NAME'"
+    echo_info "Load configured target recipe: '$TARGET_RECIPE_NAME'"
     source_recipe "${TARGET_RECIPE_NAME}"
 fi
 
