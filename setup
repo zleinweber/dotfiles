@@ -6,6 +6,7 @@ set -u
 # Recipes
 RECIPE_DIR="./recipes"
 TARGET_RECIPE_NAME="${TARGET_RECIPE_NAME:-default}"
+AUTOCHOOSE_PLATFORM_RECIPE="${AUTOCHOOSE_PLATFORM_RECIPE:-true}"
 
 # Platform
 KERNEL_NAME="$(uname -s)"
@@ -15,9 +16,7 @@ CODESPACES="${CODESPACES:-false}"
 source scripts/common.sh
 
 ## Main ##
-# load recipe(s)
-source_recipe "${TARGET_RECIPE_NAME}"
-
+# Load recipe
 if "${AUTOCHOOSE_PLATFORM_RECIPE}"; then
     case $KERNEL_NAME in
         Darwin)
@@ -30,8 +29,11 @@ if "${AUTOCHOOSE_PLATFORM_RECIPE}"; then
             ;;
     esac
 
-    echo_info "Automatically detected platform recipe: '$platform_recipe'"
+    echo_info "Use automatically detected platform recipe: '$platform_recipe'"
     source_recipe "$platform_recipe"
+else
+    echo_info "Use target recipe: '$TARGET_RECIPE_NAME'"
+    source_recipe "${TARGET_RECIPE_NAME}"
 fi
 
 # sudo
@@ -46,7 +48,7 @@ if "${SETUP_ZSH}"; then
     mkdir -p "$HOME/.zshrc.d"
     mkdir -p "$HOME/.local/share/zsh/completions"
 
-    if "${INSTALL_OH_MY_ZSH}"; then
+    if "${SETUP_OH_MY_ZSH}"; then
         ./scripts/oh-my-zsh.sh install
     fi
 fi
@@ -73,7 +75,7 @@ if "${SETUP_APT}"; then
 fi
 
 # homebrew
-if "${INSTALL_HOMEBREW}"; then
+if "${SETUP_HOMEBREW}"; then
     echo_info "Setting up homebrew"
 
     ./scripts/homebrew.sh install
@@ -102,7 +104,7 @@ fi
 if "${INSTALL_NVIM}"; then
     echo_info "Installing the latest nvim binary release"
 
-    ./scripts/nvim.sh install
+    ./scripts/neovim.sh install
 fi
 
 # macos

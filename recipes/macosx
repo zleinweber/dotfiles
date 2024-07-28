@@ -16,10 +16,10 @@ APT_REMOVE_PACKAGES=()
 APT_UPGRADE=false
 
 # atuin
-INSTALL_ATUIN=false # Atuin is installed via brew
+SETUP_ATUIN=false # Atuin is installed via brew
 
 # homebrew configuration
-INSTALL_HOMEBREW=true
+SETUP_HOMEBREW=true
 HOMEBREW_BUNDLE_FILE="./Brewfile"
 
 # MACOS
@@ -27,7 +27,7 @@ CONFIGURE_MACOS_SYSTEM=true
 SET_MACOS_HOSTNAME="${MACOS_HOSTNAME:-None}"
 
 # nvim
-INSTALL_NVIM=false
+SETUP_NVIM=false
 
 # sudo
 SUDO_UP_FRONT=false
@@ -45,4 +45,4 @@ STOW_PACKAGES=(
 
 # zsh
 SETUP_ZSH=true
-INSTALL_OH_MY_ZSH=true
+SETUP_OH_MY_ZSH=true

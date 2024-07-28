@@ -16,17 +16,17 @@ APT_REMOVE_PACKAGES=()
 APT_UPGRADE=false
 
 # atuin
-INSTALL_ATUIN=false
+SETUP_ATUIN=false
 
 # homebrew configuration
-INSTALL_HOMEBREW=false
+SETUP_HOMEBREW=false
 
 # MACOS
 CONFIGURE_MACOS_SYSTEM=false
 SET_MACOS_HOSTNAME="${MACOS_HOSTNAME:-None}"
 
 # nvim
-INSTALL_NVIM=false
+SETUP_NVIM=false
 
 # stow
 STOW_PACKAGES=()
@@ -36,4 +36,4 @@ SUDO_UP_FRONT=false
 
 # zsh
 SETUP_ZSH=true
-INSTALL_OH_MY_ZSH=false
+SETUP_OH_MY_ZSH=false
