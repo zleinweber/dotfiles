@@ -32,7 +32,6 @@ api.nvim_create_autocmd({'BufNewFile', 'BufRead'}, {
 api.nvim_create_autocmd({'BufNewFile', 'BufRead'}, {
     pattern = {'*.yaml', '*.yml'},
     group = 'FileTypeSettings',
-    command = 'setlocal ts=2 sts=2 sw=2'
     callback = function()
         vim.opt_local.tabstop = 2
         vim.opt_local.shiftwidth = 2
