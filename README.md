@@ -1,10 +1,10 @@
 # dotfiles
 
-My dotfiles repository. These files are tailored to my opinions and personal preferences. Use at your own risk.
+My dotfiles repository. These files are tailored to my opinions and personal preferences.
 
 ## Goals
 
-- Require as little human input as possible (in most cases this should be fully automated)
+- Require as little human input as possible (in should be possible to fully automate setup without human input)
 - Idempotent - running `./setup` should always be safe and result in doing nothing in everything is already configured
 - Dynamically detect and configure environment for the following platforms
   - MacOSX

@@ -3,22 +3,20 @@
 set -u
 
 ## Globals ##
-# Recipes
-RECIPE_DIR="./recipes"
+RECIPE_DIR="${RECIPE_DIR:-./recipes}"
 TARGET_RECIPE_NAME="${TARGET_RECIPE_NAME:-default}"
-
-# Platform
-KERNEL_NAME="$(uname -s)"
-CODESPACES="${CODESPACES:-false}"
+SETUP_AUTOCHOOSE_RECIPE="${SETUP_AUTOCHOOSE_RECIPE:-true}"
 
 ## functions ##
 source scripts/common.sh
 
 ## Main ##
-# load recipe(s)
-source_recipe "${TARGET_RECIPE_NAME}"
+# Load recipe
+if "${SETUP_AUTOCHOOSE_RECIPE}"; then
+    # Platform
+    KERNEL_NAME="$(uname -s)"
+    CODESPACES="${CODESPACES:-false}"
 
-if "${AUTOCHOOSE_PLATFORM_RECIPE}"; then
     case $KERNEL_NAME in
         Darwin)
             platform_recipe="macosx"
@@ -30,8 +28,11 @@ if "${AUTOCHOOSE_PLATFORM_RECIPE}"; then
             ;;
     esac
 
-    echo_info "Automatically detected platform recipe: '$platform_recipe'"
+    echo_info "Load programmatically chosen recipe: '$platform_recipe'"
     source_recipe "$platform_recipe"
+else
+    echo_info "Load configured target recipe: '$TARGET_RECIPE_NAME'"
+    source_recipe "${TARGET_RECIPE_NAME}"
 fi
 
 # sudo
@@ -41,19 +42,20 @@ fi
 
 # zsh
 if "${SETUP_ZSH}"; then
-    echo_info "Setting up zsh"
+    echo_info "Configure zsh"
 
     mkdir -p "$HOME/.zshrc.d"
     mkdir -p "$HOME/.local/share/zsh/completions"
 
-    if "${INSTALL_OH_MY_ZSH}"; then
+    if "${SETUP_OH_MY_ZSH}"; then
+        echo_info "Install oh-my-zsh"
         ./scripts/oh-my-zsh.sh install
     fi
 fi
 
 # apt
 if "${SETUP_APT}"; then
-    echo_info "Setting up apt"
+    echo_info "Install / remove / upgrade apt packages"
 
     if [ -n "${APT_INSTALL_PACKAGES[*]:-}" ]; then
         ./scripts/apt.sh install "${APT_INSTALL_PACKAGES[@]}"
@@ -73,13 +75,14 @@ if "${SETUP_APT}"; then
 fi
 
 # homebrew
-if "${INSTALL_HOMEBREW}"; then
-    echo_info "Setting up homebrew"
+if "${SETUP_HOMEBREW}"; then
+    echo_info "Install and configure homebrew"
 
     ./scripts/homebrew.sh install
     eval "$(/opt/homebrew/bin/brew shellenv)"
 
     if [ -f "${HOMEBREW_BUNDLE_FILE:-}" ]; then
+        echo_info "Install homebrew bundle"
         ./scripts/homebrew.sh bundle
     fi
 fi
@@ -87,31 +90,28 @@ fi
 # stow
 if [ -n "${STOW_PACKAGES[*]:-}" ]; then
     echo_info "Install requested dotfiles packages via stow"
-
     ./scripts/stow.sh install "${STOW_PACKAGES[@]}"
 fi
 
 # atuin
-if [ -n "${INSTALL_ATUIN}" ]; then
+if [ -n "${SETUP_ATUIN}" ]; then
     echo_info "Setting up atuin"
-
     ./scripts/atuin.sh install
 fi
 
 # nvim
-if "${INSTALL_NVIM}"; then
+if "${SETUP_NVIM}"; then
     echo_info "Installing the latest nvim binary release"
-
-    ./scripts/nvim.sh install
+    ./scripts/neovim.sh install
 fi
 
 # macos
-if "${CONFIGURE_MACOS_SYSTEM}"; then
-    echo_info "Configure macOS system settings"
-
+if "${SETUP_MACOS_SYSTEM}"; then
     if [ ! "${SET_MACOS_HOSTNAME}" == "None" ]; then
+        echo_info "Set macOS hostname to: ${SET_MACOS_HOSTNAME}"
         ./scripts/macos.sh hostname "${SET_MACOS_HOSTNAME}"
     fi
 
+    echo_info "Configure macOS system settings"
     ./scripts/macos.sh configure
 fi
