@@ -4,22 +4,28 @@ My dotfiles repository. These files are tailored to my opinions and personal pre
 
 ## Goals
 
-- Require as little human input as possible (in should be possible to fully automate setup without human input)
-- Idempotent - running `./setup` should always be safe and result in doing nothing in everything is already configured
-- Dynamically detect and configure environment for the following platforms
-  - MacOSX
-  - Linux (primarily Ubuntu in codespaces)
-  - Arch Linux (not yet impmlemented)
-- Manage all configuration files (dotfiles) via GNU Stow in a modular way.
-  - Modularity, in this case, supports the dynamic multi envionment configuration described above
-  - Conflict management should be supported. As in, if this repo wants to install a `.zshrc` in the users home directory it should support backing up the original unmanaged `.zshrc` if one exists.
-- Install common third party tools and utilities via the appropriate package manager
+- Low touch. Environment should be automatically detected and configured and require as litle human input as possible.
+- Idempotent. It should always be safe to run the whole setup script from the top.
+- Modularity. It should be possible to build 'recipes' by mixing and matching different modules.
+
+## Features
+
+### Generic features
+
+- Configuration files are grouped into 'packages' and managed via stow
+  - Supports automatically backing up any existing conflicts for a managed file.
+- Installation of third party tools and utilities via the appropriate package manager
   - APT on Ubuntu
   - Brew on MacOSX
   - Pacman on Arch
-- Configure MacOSX system settings in a scripted way
-- Where appropriate use mackup to sync application settings
-  - This is primarily to support cases where configuration can't simply be installed via stow
+- Conifguration of MacOSX system settings in a scripted way
+
+### Tool support
+
+- atuin
+- oh-my-zsh
+- homebrew
+- neovim
 
 ## Structure
 
