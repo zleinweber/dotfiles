@@ -35,16 +35,23 @@ Yet another dotfiles repository.
 
 ## Structure
 
+### ./setup
+
+`./setup` is a shell script that requires no arguments and by default runs through all setup tasks for a platform. It serves as the main entrypoint to setup tasks. It is idempotent and can be run at any time.
+
+It's primary job is to choose a _recipe_ either by taking a recipe passed in via an environment variable or by choosing an appropriate one based on the detected platform. It then runs through an executes the appropriate set of steps based on the settings in the recipe. Each step is typically encapsulated by a script in the `scripts/` directory.
+
 ### recipes/
 
-The desired configuration will depend on the target platform that we are configuring. As a result, most of the scripts here are configurable in the form of environment variables. These variables control things like:
+A recipe is a configuration file for a given scenario, platform, etc. It's job is to inform `./setup` and the scripts that it calls in the `scripts/` dir how they should behave. It does this by setting environment variables that are used by `./setup` and the scripts in `scripts/`.
 
-- The list of external packages to be installed
-- The appropriate package manager to use to install pacakges (Apt, Pacman, Brew)
-- The list of stow packages to install (these are the 'modular' packages local to this repository that contain dotfiles)
-- Control for third party tooling install scripts that can't be installed via a package manager (oh-my-zsh, atuin, homebrew, etc.)
+`./setup` should choose exactly one recipe and that recipe needs to, at minimum, configure all the environment variables for `./setup` to run.
 
-Recipes are a pre-set configuration of all of these environment variables intended as the 'default' for a desired platform. This allows for fully automated configuration as, in most cases, it is trivial to automatically detect the platform we are running on and dynamically load the appropriate recipe. These `recipes` live in the `recipes` directory and are auto-loaded by the `setup` script.
+The environment variables set in a recipe are used to inform things like:
+
+- Control for third party tooling install scripts. These are typically used for tools that cannot be installed via a package manager (for example the homebrew package manager itself).
+- The list of external packages to be installed via a package manager.
+- The list of configuration packages to install via stow (these are the 'modular' packages local to this repository that contain dotfiles)
 
 ### scripts/
 
