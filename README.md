@@ -1,10 +1,10 @@
 # dotfiles
 
-My dotfiles repository. These files are tailored to my opinions and personal preferences.
+Yet another dotfiles repository.
 
 ## Goals
 
-- Low touch. Environment should be automatically detected and configured and require as litle human input as possible.
+- Low touch. Platform should be automatically detected and configured and require as litle human input as possible.
 - Idempotent. It should always be safe to run the whole setup script from the top.
 - Modularity. It should be possible to build 'recipes' by mixing and matching different modules.
 
@@ -17,7 +17,7 @@ My dotfiles repository. These files are tailored to my opinions and personal pre
 - Installation of third party tools and utilities via the appropriate package manager
   - APT on Ubuntu
   - Brew on MacOSX
-  - Pacman on Arch
+  - Pacman on Arch (future support)
 - Conifguration of MacOSX system settings in a scripted way
 
 ### Tool support
@@ -26,6 +26,12 @@ My dotfiles repository. These files are tailored to my opinions and personal pre
 - oh-my-zsh
 - homebrew
 - neovim
+
+### Platform support
+
+- macosx
+- Ubuntu in codespaces
+- Archlinux (future support)
 
 ## Structure
 
