@@ -5,9 +5,10 @@ Another dotfiles repository.
 ## Goals
 
 - *Simple to use*. There is one way to run setup and it always results in the same configuration (see idempotence).
-- *Low touch*. Should work on multiple target platforms. Platform detection should be automatic and configuration should require as litle human input as possible.
-- *Idempotent*. It should always be safe to run the whole setup script from the top.
-- *Modularity*. It should be possible to build 'recipes' by mixing and matching different modules.
+- *Multi Platform*. Out of box support for multiple supported platforms (Ubuntu Linux, Arch Linux, MacOSX, Codespaces, etc.)
+- *Low touch*. Require minimal human input.
+- *Idempotent*. It is always be safe to run the whole setup script from the top.
+- *Modularity*. It is easy to 'recipes' by mixing and matching different modules.
 
 ## Usage
 

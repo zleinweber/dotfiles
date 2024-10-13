@@ -28,15 +28,16 @@ if "${SETUP_AUTOCHOOSE_RECIPE}"; then
             ;;
     esac
 
-    echo_info "Load programmatically chosen recipe: '$platform_recipe'"
+    echo_info "Using automatically chosen recipe: '$platform_recipe'"
     source_recipe "$platform_recipe"
 else
-    echo_info "Load configured target recipe: '$TARGET_RECIPE_NAME'"
+    echo_info "Using configured target recipe: '$TARGET_RECIPE_NAME'"
     source_recipe "${TARGET_RECIPE_NAME}"
 fi
 
 # sudo
 if "${SUDO_UP_FRONT}"; then
+    echo_info "Requesting sudo password to cache credentials for script run duration"
     sudo_up_front
 fi
 
