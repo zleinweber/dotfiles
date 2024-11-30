@@ -49,6 +49,7 @@ Codespaces will now automagically clone this repository and run the `./setup` sc
 ### Tool support
 
 - atuin
+- fabric
 - homebrew
 - neovim
 - oh-my-zsh
