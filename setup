@@ -54,6 +54,12 @@ if "${SETUP_ZSH}"; then
     fi
 fi
 
+# hashicorp
+if "${SETUP_HASHI_APT_REPO}"; then
+    echo_info "Configure the HashiCorp apt repository"
+    ./scripts/hashi_apt_repo.sh configure
+fi
+
 # apt
 if "${SETUP_APT}"; then
     echo_info "Install / remove / upgrade apt packages"
