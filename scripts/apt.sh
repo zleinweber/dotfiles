@@ -50,12 +50,12 @@ function manage_apt_pacakges () {
 
     echo_info: "Running apt-get $operation for packages: ${packages[*]}"
     sudo apt-get update
-    sudo apt-get "$operation" -y "${packages[@]}"
+    sudo DEBIAN_FRONTEND=noninteractive apt-get "$operation" -y "${packages[@]}"
 }
 
 function cleanup_apt () {
     echo_info "Cleaning apt cache and removing unused packages"
-    sudo apt-get autoremove -y
+    sudo DEBIAN_FRONTEND=noninteractive apt-get autoremove -y
     sudo apt-get clean
     sudo rm -rf /var/lib/apt/lists/*
 }
@@ -63,7 +63,7 @@ function cleanup_apt () {
 function apt_upgrade () {
     echo_info "Upgrading all installed packages"
     sudo apt-get update
-    sudo apt-get upgrade -y
+    sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
 }
 
 ## Main ##
