@@ -18,6 +18,9 @@ APT_UPGRADE=false
 # atuin
 SETUP_ATUIN=false
 
+# hashicorp
+SETUP_HASHI_APT_REPO=false
+
 # homebrew configuration
 SETUP_HOMEBREW=false
 

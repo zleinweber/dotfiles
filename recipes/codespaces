@@ -13,13 +13,18 @@ SETUP_APT=true
 APT_CLEAN=true
 APT_INSTALL_PACKAGES=(
     bat
+    consul
     curl
     git
     jq
     luarocks
+    nomad
+    packer
     shellcheck
     stow
+    terraform
     tmux
+    vault
     wget
     zsh
 )
@@ -28,6 +33,9 @@ APT_UPGRADE=true
 
 # atuin
 SETUP_ATUIN=true
+
+# hashicorp
+SETUP_HASHI_APT_REPO=true
 
 # homebrew configuration
 SETUP_HOMEBREW=false
