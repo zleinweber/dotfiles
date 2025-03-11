@@ -60,6 +60,9 @@ STOW_PACKAGES=(
     zsh-codespace
 )
 
+# yq
+SETUP_YQ=false
+
 # zsh
 SETUP_ZSH=true
 SETUP_OH_MY_ZSH=true

@@ -112,6 +112,12 @@ if "${SETUP_NVIM}"; then
     ./scripts/neovim.sh install
 fi
 
+# yq
+if "${SETUP_YQ}"; then
+    echo_info "Installing yq"
+    ./scripts/yq.sh install
+fi
+
 # macos
 if "${SETUP_MACOS_SYSTEM}"; then
     if [ ! "${SET_MACOS_HOSTNAME}" == "None" ]; then
