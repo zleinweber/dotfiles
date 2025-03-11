@@ -61,7 +61,7 @@ STOW_PACKAGES=(
 )
 
 # yq
-SETUP_YQ=false
+SETUP_YQ=true
 
 # zsh
 SETUP_ZSH=true
