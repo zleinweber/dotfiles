@@ -43,3 +43,6 @@ SETUP_YQ=false
 # zsh
 SETUP_ZSH=true
 SETUP_OH_MY_ZSH=false
+
+# astral.sh tools
+SETUP_ASTRAL_SH_TOOLS=false

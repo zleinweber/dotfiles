@@ -48,7 +48,7 @@ function manage_apt_pacakges () {
         exit 1
     fi
 
-    echo_info: "Running apt-get $operation for packages: ${packages[*]}"
+    echo_info "Running apt-get $operation for packages: ${packages[*]}"
     sudo apt-get update
     sudo DEBIAN_FRONTEND=noninteractive apt-get "$operation" -y "${packages[@]}"
 }
