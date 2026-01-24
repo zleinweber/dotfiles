@@ -118,6 +118,11 @@ if "${SETUP_YQ}"; then
     ./scripts/yq.sh install
 fi
 
+if "${SETUP_ASTRAL_SH_TOOLS}"; then
+    echo_info "Installing astral sh tooling"
+    ./scripts/astral.sh install
+fi
+
 # macos
 if "${SETUP_MACOS_SYSTEM}"; then
     if [ ! "${SET_MACOS_HOSTNAME}" == "None" ]; then
