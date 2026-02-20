@@ -1,6 +1,7 @@
 brew "atuin"
 brew "bat"
 brew "coreutils"
+brew "f3"
 brew "gh"
 brew "grep"
 brew "jq"
