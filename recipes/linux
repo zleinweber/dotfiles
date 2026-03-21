@@ -5,9 +5,6 @@
 # Description: Generic linux configuration
 ###########
 
-# Recipe configuration
-AUTOCHOOSE_PLATFORM_RECIPE=true
-
 # APT packages
 SETUP_APT=false
 APT_CLEAN=false

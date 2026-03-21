@@ -5,9 +5,6 @@
 # Description: First time setup for macbooks
 ###########
 
-# Recipe configuration
-AUTOCHOOSE_PLATFORM_RECIPE=false
-
 # APT packages
 SETUP_APT=false
 APT_CLEAN=false

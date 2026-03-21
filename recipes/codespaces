@@ -5,9 +5,6 @@
 # Description: Setup codespaces default image
 ###########
 
-# Recipe configuration
-AUTOCHOOSE_PLATFORM_RECIPE=false
-
 # APT packages
 SETUP_APT=true
 APT_CLEAN=true
