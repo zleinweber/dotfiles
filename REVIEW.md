@@ -13,6 +13,17 @@ The repository is not fundamentally flawed. The overall structure is sensible:
 
 The main issue is not the architecture. It is execution quality. The repo has a good shape for a personal bootstrap system, but it does not yet fully meet its stated goals of simplicity, idempotence, and multi-platform safety.
 
+## Intended Scope
+
+The current intent is:
+
+- personal-first rather than framework-first
+- support real, active environments on macOS and GitHub Codespaces
+- keep generic Linux as an intended target, even though it is not currently exercised regularly
+- require `./setup` to be safe for unattended reruns after any necessary initial sudo authentication
+
+This framing matters for evaluation. Some portability concerns are less important for a strictly personal repo, but unattended safety and repeatability are more important.
+
 ## Findings
 
 ### 1. High: recipe auto-selection can leave setup in an undefined state on non-Codespaces Linux
@@ -86,7 +97,7 @@ References:
 - [`stow/gitconfig-osx/.gitconfig:7`](./stow/gitconfig-osx/.gitconfig)
 - [`stow/gitconfig-osx/.gitconfig:15`](./stow/gitconfig-osx/.gitconfig)
 
-This is fine if the repo is strictly private and single-user, but it conflicts with the repo's more general "modular / multi-platform" framing. Hardcoded name, email, SSH signing key, and 1Password app path reduce portability substantially.
+This is less severe for a strictly personal repo than it would be in a shared framework. Even so, hardcoded name, email, SSH signing key, and 1Password app path still reduce portability and make future generic reuse harder.
 
 ### 9. Low: the zsh bootstrap has a typo and weak quoting
 
@@ -167,12 +178,8 @@ Recommended direction:
 - keep general Git behavior in tracked config
 - move personal name, email, signing key, and workstation-specific signing program into a local include or separate machine-local config
 
-## Open Questions
-
-- Is this intended to remain strictly private/personal, or should it be robust on arbitrary Linux hosts?
-- Is generic Linux supposed to be supported now, or only macOS and Codespaces?
-- Should `setup` be safe for repeated unattended execution, or only for interactive personal use?
-
 ## Overall Assessment
 
 The repository does not need a redesign. The structure is good enough to keep. The main work is tightening the contract between recipes and `setup`, making failure explicit, and removing a few brittle patterns. If those are addressed, this should become a solid personal bootstrap repo rather than a mostly-working one.
+
+Given the intended scope, the most important standard is not "can this be a reusable framework for anyone?" but "does this reliably rebuild the author's environments without supervision?" By that standard, the current structure is appropriate, but the implementation still needs hardening in a few key places.
