@@ -2,6 +2,8 @@
 
 This document captures the current review of the repository, the highest-priority fixes, and the recommended follow-up work to make the repo more robust.
 
+This review was generated using openai codex with minimal human input.
+
 ## Summary
 
 The repository is not fundamentally flawed. The overall structure is sensible:
