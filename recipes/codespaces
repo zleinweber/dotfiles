@@ -16,6 +16,7 @@ APT_INSTALL_PACKAGES=(
     consul
     curl
     git
+    iputils-ping
     jq
     luarocks
     nomad
