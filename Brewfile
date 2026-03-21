@@ -17,6 +17,8 @@ brew "wget"
 
 cask "amethyst"
 cask "chatgpt"
+cask "codex"
+cask "codex-app"
 cask "discord"
 cask "docker-desktop"
 cask "github"
