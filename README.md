@@ -2,6 +2,8 @@
 
 Another dotfiles repository.
 
+For a current evaluation of the repository and prioritized improvement work, see [REVIEW.md](./REVIEW.md).
+
 ## Goals
 
 - *Simple to use*. There is one way to run setup and it always results in the same configuration (see idempotence).
