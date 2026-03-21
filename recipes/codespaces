@@ -5,6 +5,9 @@
 # Description: Setup codespaces default image
 ###########
 
+# shellcheck shell=bash
+# shellcheck disable=SC2034
+
 # APT packages
 SETUP_APT=true
 APT_CLEAN=true
@@ -15,6 +18,7 @@ APT_INSTALL_PACKAGES=(
     git
     iputils-ping
     jq
+    just
     luarocks
     nomad
     packer

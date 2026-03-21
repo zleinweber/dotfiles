@@ -5,6 +5,9 @@
 # Description: First time setup for macbooks
 ###########
 
+# shellcheck shell=bash
+# shellcheck disable=SC2034
+
 # APT packages
 SETUP_APT=false
 APT_CLEAN=false
