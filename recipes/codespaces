@@ -35,6 +35,9 @@ APT_UPGRADE=true
 # atuin
 SETUP_ATUIN=true
 
+# codex
+SETUP_CODEX_CLI=true
+
 # hashicorp
 SETUP_HASHI_APT_REPO=true
 

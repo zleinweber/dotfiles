@@ -123,6 +123,11 @@ if "${SETUP_ASTRAL_SH_TOOLS}"; then
     ./scripts/astral.sh install
 fi
 
+if "${SETUP_CODEX_CLI}"; then
+    echo_info "Installing codex cli"
+    ./scripts/codex.sh install
+fi
+
 # macos
 if "${SETUP_MACOS_SYSTEM}"; then
     if [ ! "${SET_MACOS_HOSTNAME}" == "None" ]; then

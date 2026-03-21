@@ -18,6 +18,9 @@ APT_UPGRADE=false
 # atuin
 SETUP_ATUIN=false # Atuin is installed via brew
 
+# codex
+SETUP_CODEX_CLI=false
+
 # hashicorp
 SETUP_HASHI_APT_REPO=false
 
