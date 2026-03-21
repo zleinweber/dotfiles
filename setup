@@ -24,16 +24,28 @@ if "${SETUP_AUTOCHOOSE_RECIPE}"; then
         Linux)
             if "$CODESPACES"; then
                 platform_recipe="codespaces"
+            else
+                platform_recipe="linux"
             fi
+            ;;
+        *)
+            echo_error "Unable to detect platform: $KERNEL_NAME"
+            exit 1
             ;;
     esac
 
     echo_info "Using automatically chosen recipe: '$platform_recipe'"
-    source_recipe "$platform_recipe"
+    recipe_to_source="$platform_recipe"
 else
     echo_info "Using configured target recipe: '$TARGET_RECIPE_NAME'"
-    source_recipe "${TARGET_RECIPE_NAME}"
+    recipe_to_source="${TARGET_RECIPE_NAME}"
 fi
+
+if ! source_recipe "$recipe_to_source"; then
+    echo_error "Failed to source recipe '$recipe_to_source'"
+    exit 1
+fi
+
 
 # sudo
 if "${SUDO_UP_FRONT}"; then

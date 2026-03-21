@@ -28,7 +28,7 @@ This framing matters for evaluation. Some portability concerns are less importan
 
 ## Findings
 
-### 1. High: recipe auto-selection can leave setup in an undefined state on non-Codespaces Linux
+### 1. Fixed: recipe auto-selection could leave setup in an undefined state on non-Codespaces Linux
 
 References:
 
@@ -36,7 +36,11 @@ References:
 - [`setup:24`](./setup)
 - [`scripts/common.sh:27`](./scripts/common.sh)
 
-On Linux, `platform_recipe` is only set when `CODESPACES=true`. Otherwise `source_recipe "$platform_recipe"` is called with an unset or empty value. `source_recipe` only logs an error and does not exit, so the rest of `setup` can run with missing variables. This directly undermines the "one safe entrypoint" goal.
+Status:
+
+- fixed in the working tree
+
+`setup` now selects an explicit generic Linux recipe when `CODESPACES=false`, fails explicitly on unknown platforms, and exits immediately when the selected recipe cannot be sourced. That closes the original undefined-state failure mode.
 
 ### 2. High: APT package removal is wired to the wrong array
 
@@ -120,17 +124,20 @@ The README promises simple, idempotent, multi-platform setup, including Arch as 
 
 ## Priority Order
 
-1. Fix recipe selection and make missing or invalid recipe a hard failure.
-2. Fix the APT remove-array bug.
-3. Fix boolean handling, starting with `SETUP_ATUIN`, then standardize all booleans.
-4. Add fail-fast shell options and error handling across `setup` and helper scripts.
-5. Remove Atuin auth/login from shell startup and redesign its install flow.
-6. Separate personal identity, secrets, and machine-local settings from reusable tracked config.
-7. Tighten docs to match actual guarantees.
+1. Fix the APT remove-array bug.
+2. Fix boolean handling, starting with `SETUP_ATUIN`, then standardize all booleans.
+3. Add fail-fast shell options and error handling across `setup` and helper scripts.
+4. Remove Atuin auth/login from shell startup and redesign its install flow.
+5. Separate personal identity, secrets, and machine-local settings from reusable tracked config.
+6. Tighten docs to match actual guarantees.
 
 ## Recommended First Changes
 
 ### 1. Make recipe selection explicit and total
+
+Status:
+
+- completed in the working tree
 
 In `setup`:
 
