@@ -54,15 +54,18 @@ Status:
 
 The remove branch now checks `APT_REMOVE_PACKAGES` and passes `APT_REMOVE_PACKAGES[@]` to `scripts/apt.sh remove`.
 
-### 3. High: `SETUP_ATUIN=false` still executes the Atuin installer
+### 3. Fixed: `SETUP_ATUIN=false` still executed the Atuin installer
 
 References:
 
-- [`setup:104`](./setup)
-- [`recipes/default:19`](./recipes/default)
+- [`setup:120`](./setup)
 - [`recipes/macosx:19`](./recipes/macosx)
 
-The condition uses `[ -n "${SETUP_ATUIN}" ]`, which is true for both `"true"` and `"false"`. That makes the recipe flag ineffective and causes behavior that contradicts the recipe definitions.
+Status:
+
+- fixed in the working tree
+
+The Atuin setup branch now evaluates `SETUP_ATUIN` as a command-style boolean, so `SETUP_ATUIN=false` skips the installer and `SETUP_ATUIN=true` runs it.
 
 ### 4. Medium: recipe-level control for auto-selection is dead code or misnamed
 
@@ -128,7 +131,7 @@ The README promises simple, idempotent, multi-platform setup, including Arch as 
 
 ## Priority Order
 
-1. Fix boolean handling, starting with `SETUP_ATUIN`, then standardize all booleans.
+1. Standardize boolean handling across all setup flags.
 2. Add fail-fast shell options and error handling across `setup` and helper scripts.
 3. Remove Atuin auth/login from shell startup and redesign its install flow.
 4. Separate personal identity, secrets, and machine-local settings from reusable tracked config.
