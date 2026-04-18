@@ -85,7 +85,7 @@ if "${SETUP_APT}"; then
     fi
 
     if [ -n "${APT_REMOVE_PACKAGES[*]:-}" ]; then
-        ./scripts/apt.sh remove "${APT_INSTALL_PACKAGES[@]}"
+        ./scripts/apt.sh remove "${APT_REMOVE_PACKAGES[@]}"
     fi
 
     if "${APT_UPGRADE}"; then
