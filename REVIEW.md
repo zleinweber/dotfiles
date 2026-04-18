@@ -42,13 +42,17 @@ Status:
 
 `setup` now selects an explicit generic Linux recipe when `CODESPACES=false`, fails explicitly on unknown platforms, and exits immediately when the selected recipe cannot be sourced. That closes the original undefined-state failure mode.
 
-### 2. High: APT package removal is wired to the wrong array
+### 2. Fixed: APT package removal was wired to the wrong array
 
 References:
 
-- [`setup:71`](./setup)
+- [`setup:88`](./setup)
 
-The remove branch checks `APT_REMOVE_PACKAGES` but passes `APT_INSTALL_PACKAGES[@]` to `scripts/apt.sh remove`. If removal is ever used, it will target the install list instead of the remove list.
+Status:
+
+- fixed in the working tree
+
+The remove branch now checks `APT_REMOVE_PACKAGES` and passes `APT_REMOVE_PACKAGES[@]` to `scripts/apt.sh remove`.
 
 ### 3. High: `SETUP_ATUIN=false` still executes the Atuin installer
 
@@ -124,12 +128,11 @@ The README promises simple, idempotent, multi-platform setup, including Arch as 
 
 ## Priority Order
 
-1. Fix the APT remove-array bug.
-2. Fix boolean handling, starting with `SETUP_ATUIN`, then standardize all booleans.
-3. Add fail-fast shell options and error handling across `setup` and helper scripts.
-4. Remove Atuin auth/login from shell startup and redesign its install flow.
-5. Separate personal identity, secrets, and machine-local settings from reusable tracked config.
-6. Tighten docs to match actual guarantees.
+1. Fix boolean handling, starting with `SETUP_ATUIN`, then standardize all booleans.
+2. Add fail-fast shell options and error handling across `setup` and helper scripts.
+3. Remove Atuin auth/login from shell startup and redesign its install flow.
+4. Separate personal identity, secrets, and machine-local settings from reusable tracked config.
+5. Tighten docs to match actual guarantees.
 
 ## Recommended First Changes
 

@@ -21,8 +21,8 @@ These are the highest-priority fixes because they affect whether `./setup` does 
     - generic Linux
 - [x] Make missing or unreadable recipes fatal.
   - `setup` now exits when the requested recipe cannot be loaded.
-- Fix the APT remove-path bug.
-  - When `APT_REMOVE_PACKAGES` is set, pass `APT_REMOVE_PACKAGES[@]`, not `APT_INSTALL_PACKAGES[@]`.
+- [x] Fix the APT remove-path bug.
+  - When `APT_REMOVE_PACKAGES` is set, `setup` now passes `APT_REMOVE_PACKAGES[@]`, not `APT_INSTALL_PACKAGES[@]`.
 - Fix boolean handling in `setup`.
   - `SETUP_ATUIN=false` must not run the Atuin installer.
   - Audit every `SETUP_*` and related control flag for consistent behavior.
@@ -118,7 +118,7 @@ These are lower-priority improvements that may help later.
 
 ## Recommended Order of Execution
 
-1. Fix boolean handling and the APT remove bug.
+1. Fix boolean handling.
 2. Add fail-fast shell behavior.
 3. Rework Atuin to remove shell-start authentication behavior.
 4. Define and implement the generic Linux story explicitly.
