@@ -67,14 +67,17 @@ Status:
 
 The Atuin setup branch now evaluates `SETUP_ATUIN` as a command-style boolean, so `SETUP_ATUIN=false` skips the installer and `SETUP_ATUIN=true` runs it.
 
-### 4. Medium: recipe-level control for auto-selection is dead code or misnamed
+### 4. Fixed: recipe-level control for auto-selection was dead code or misnamed
 
 References:
 
-- [`setup:8`](./setup)
-- [`recipes/default:9`](./recipes/default)
+- [`setup:7`](./setup)
 
-`setup` reads `SETUP_AUTOCHOOSE_RECIPE`, but recipes define `AUTOCHOOSE_PLATFORM_RECIPE`. As written, the recipe cannot influence that behavior. This is a maintainability bug and a sign the contract between `setup` and recipes has drifted.
+Status:
+
+- fixed in the working tree
+
+The dead recipe-level `AUTOCHOOSE_PLATFORM_RECIPE` setting has been removed, and `setup` no longer uses a separate `SETUP_AUTOCHOOSE_RECIPE` flag. Recipe selection now follows a simpler contract: an explicit recipe argument wins, `TARGET_RECIPE_NAME` can provide an environment override, and `./setup` with neither falls back to platform auto-detection.
 
 ### 5. Medium: the bootstrap does not fail fast
 
