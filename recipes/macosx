@@ -5,8 +5,8 @@
 # Description: First time setup for macbooks
 ###########
 
-# Recipe configuration
-AUTOCHOOSE_PLATFORM_RECIPE=false
+# shellcheck shell=bash
+# shellcheck disable=SC2034
 
 # APT packages
 SETUP_APT=false

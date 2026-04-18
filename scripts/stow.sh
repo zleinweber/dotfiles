@@ -34,7 +34,7 @@ function manage_package_conflicts () {
     local package_path="${STOW_DIR}/${package}"
 
     find "$package_path" -mindepth 1 -type f | while read -r package_file; do
-        file_rel_path="${package_file#$package_path/}"
+        file_rel_path="${package_file#"$package_path"/}"
         file_install_path="${STOW_TARGET_DIR}/${file_rel_path}"
         file_backup_path="${conflicts_dir}/${file_rel_path}"
         file_backup_dir=$(dirname "$file_backup_path")

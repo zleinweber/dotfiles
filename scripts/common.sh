@@ -32,7 +32,7 @@ function source_recipe () {
         # shellcheck source=/dev/null
         source "$recipe_path"
     else
-        echo_error "Recipe '$recipe_name' does not exist or is not readable"
+        return 1
     fi
 }
 

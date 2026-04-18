@@ -4,7 +4,6 @@ set -u
 
 ## Globals ##
 RECIPE_DIR="${RECIPE_DIR:-./recipes}"
-TARGET_RECIPE_NAME="${TARGET_RECIPE_NAME:-default}"
 SETUP_AUTOCHOOSE_RECIPE="${SETUP_AUTOCHOOSE_RECIPE:-true}"
 
 ## functions ##
@@ -24,16 +23,33 @@ if "${SETUP_AUTOCHOOSE_RECIPE}"; then
         Linux)
             if "$CODESPACES"; then
                 platform_recipe="codespaces"
+            else
+                platform_recipe="linux"
             fi
+            ;;
+        *)
+            echo_error "Unable to detect platform: $KERNEL_NAME"
+            exit 1
             ;;
     esac
 
     echo_info "Using automatically chosen recipe: '$platform_recipe'"
-    source_recipe "$platform_recipe"
+    recipe_to_source="$platform_recipe"
 else
-    echo_info "Using configured target recipe: '$TARGET_RECIPE_NAME'"
-    source_recipe "${TARGET_RECIPE_NAME}"
+    if [ -z "${TARGET_RECIPE_NAME:-}" ]; then
+        echo_error "No target recipe specified and auto-choose is disabled. Exiting."
+        exit 1
+    fi
+
+    echo_info "Using specified target recipe: '$TARGET_RECIPE_NAME'"
+    recipe_to_source="$TARGET_RECIPE_NAME"
 fi
+
+if ! source_recipe "$recipe_to_source"; then
+    echo_error "Failed to source recipe '$recipe_to_source'"
+    exit 1
+fi
+
 
 # sudo
 if "${SUDO_UP_FRONT}"; then

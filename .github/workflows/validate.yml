@@ -1,0 +1,14 @@
+name: Validate
+
+on:
+    push:
+
+jobs:
+    validate:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+            - run: sudo apt-get update
+            - run: sudo apt-get install -y shellcheck
+            - name: Validate shell scripts
+              run: ./scripts/validate.sh

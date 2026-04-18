@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 ###########
-# Recipe Name: default
-# Description: Default recipe configuration
+# Recipe Name: linux
+# Description: Generic linux configuration
 ###########
 
-# Recipe configuration
-AUTOCHOOSE_PLATFORM_RECIPE=true
+# shellcheck shell=bash
+# shellcheck disable=SC2034
 
 # APT packages
 SETUP_APT=false

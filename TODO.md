@@ -13,14 +13,14 @@ The intent for this repository is:
 
 These are the highest-priority fixes because they affect whether `./setup` does the right thing at all.
 
-- Fix recipe selection in `setup`.
-  - Ensure auto-selection always chooses a valid recipe or exits with a clear error.
-  - Handle at least:
+- [x] Fix recipe selection in `setup`.
+  - Auto-selection now chooses a valid recipe or exits with a clear error.
+  - Covered paths:
     - macOS
     - Codespaces
-    - generic Linux, or a deliberate explicit failure until it is implemented
-- Make missing or unreadable recipes fatal.
-  - `source_recipe` should not only log; it should stop the run when the requested recipe cannot be loaded.
+    - generic Linux
+- [x] Make missing or unreadable recipes fatal.
+  - `setup` now exits when the requested recipe cannot be loaded.
 - Fix the APT remove-path bug.
   - When `APT_REMOVE_PACKAGES` is set, pass `APT_REMOVE_PACKAGES[@]`, not `APT_INSTALL_PACKAGES[@]`.
 - Fix boolean handling in `setup`.
@@ -118,10 +118,9 @@ These are lower-priority improvements that may help later.
 
 ## Recommended Order of Execution
 
-1. Fix recipe loading and fatal error behavior.
-2. Fix boolean handling and the APT remove bug.
-3. Add fail-fast shell behavior.
-4. Rework Atuin to remove shell-start authentication behavior.
-5. Define and implement the generic Linux story explicitly.
-6. Add validation tooling and lightweight CI.
-7. Refresh docs to match the new guarantees.
+1. Fix boolean handling and the APT remove bug.
+2. Add fail-fast shell behavior.
+3. Rework Atuin to remove shell-start authentication behavior.
+4. Define and implement the generic Linux story explicitly.
+5. Add validation tooling and lightweight CI.
+6. Refresh docs to match the new guarantees.
