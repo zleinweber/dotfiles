@@ -117,7 +117,7 @@ if [ -n "${STOW_PACKAGES[*]:-}" ]; then
 fi
 
 # atuin
-if [ -n "${SETUP_ATUIN}" ]; then
+if "${SETUP_ATUIN}"; then
     echo_info "Setting up atuin"
     ./scripts/atuin.sh install
 fi
