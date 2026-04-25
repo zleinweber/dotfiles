@@ -66,9 +66,19 @@ Codespaces will now automagically clone this repository and run the `./setup` sc
 
 ### ./setup
 
-`./setup` is the entrypoint for interacting with this repository. It is a shell script that requires no arguments and runs through all setup tasks for a platform. It should always be safe to rerun `./steup` becuase it should be an idempotent script.
+`./setup` is the entrypoint for interacting with this repository. It is a shell script that can be run without arguments to auto-detect the current platform and run through all setup tasks for the matching recipe, or with an optional first argument to select a recipe explicitly. It should always be safe to rerun `./setup` because it should be an idempotent script.
 
-It's primary job is to choose a *recipe* either by taking a recipe passed in via an environment variable or by choosing an appropriate one based on the detected platform. It then runs through and executes the appropriate set of steps based on the settings in the recipe. Each step is typically encapsulated by a script in the `scripts/` directory.
+Its primary job is to choose a *recipe* and then run the appropriate setup steps based on that recipe. By default, `./setup` auto-detects the current platform and chooses the matching recipe. A recipe can also be selected explicitly by passing it as the first argument, or by setting `TARGET_RECIPE_NAME`.
+
+Examples:
+
+```sh
+./setup
+./setup macosx
+TARGET_RECIPE_NAME=codespaces ./setup
+```
+
+Each setup step is typically encapsulated by a script in the `scripts/` directory.
 
 ### recipes/
 
