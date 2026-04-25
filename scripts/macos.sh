@@ -33,6 +33,7 @@ function configure_macosx_system () {
     defaults write com.apple.dock autohide -bool TRUE
     defaults write com.apple.dock orientation -string "left"
     defaults write com.apple.dock tilesize -int 36
+    defaults write com.apple.dock workspaces-auto-swoosh -bool NO
 
     ## Finder Settings ##
     defaults write NSGlobalDomain AppleShowAllExtensions -bool TRUE
