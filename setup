@@ -12,6 +12,11 @@ source scripts/common.sh
 ## Main ##
 # Load recipe
 if [ -n "$TARGET_RECIPE_NAME" ]; then
+    if [[ ! "$TARGET_RECIPE_NAME" =~ ^[A-Za-z0-9_-]+$ ]]; then
+        echo_error "Invalid recipe name: '$TARGET_RECIPE_NAME'"
+        exit 1
+    fi
+
     echo_info "Using specified target recipe: '$TARGET_RECIPE_NAME'"
     recipe_to_source="$TARGET_RECIPE_NAME"
 else
