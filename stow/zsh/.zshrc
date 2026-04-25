@@ -2,8 +2,8 @@
 export ZSH=$HOME/.oh-my-zsh
 
 HISTFILE=$HOME/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
+HISTSIZE=100000
+SAVEHIST=100000
 HIST_STAMPS="yyyy-mm-dd"
 
 export ZSH_LOCAL_COMPLETIONS=$HOME/.local/share/zsh/completions
