@@ -1,22 +1,43 @@
 #!/usr/bin/env bash
 
+set -o pipefail
+
 ## Globals ##
 NVIM_INSTALL_DIR="${NVIM_INSTALL_DIR:-/opt}"
 NVIM_STOW_DIR="${NVIM_STOW_DIR:-/usr/local}"
-NVIM_DIST="nvim-linux64"
-NVIM_DIR="${NVIM_INSTALL_DIR}/${NVIM_DIST}"
-NVIM_TARBALL="${NVIM_DIST}.tar.gz"
-NVIM_TARBALL_URL="https://github.com/neovim/neovim/releases/latest/download/${NVIM_TARBALL}"
 NVIM_FORCE_INSTALL="${NVIM_FORCE_INSTALL:-true}"
 
 ## Functions ##
 source ./scripts/common.sh
 
+function default_nvim_dist () {
+    case "$(uname -m)" in
+        x86_64|amd64)
+            echo "nvim-linux-x86_64"
+            ;;
+        aarch64|arm64)
+            echo "nvim-linux-arm64"
+            ;;
+        *)
+            echo_error "Unsupported Neovim architecture: $(uname -m)"
+            return 1
+            ;;
+    esac
+}
+
+if [ -z "${NVIM_DIST:-}" ]; then
+    NVIM_DIST="$(default_nvim_dist)" || exit 1
+fi
+
+NVIM_DIR="${NVIM_INSTALL_DIR}/${NVIM_DIST}"
+NVIM_TARBALL="${NVIM_DIST}.tar.gz"
+NVIM_TARBALL_URL="${NVIM_TARBALL_URL:-https://github.com/neovim/neovim/releases/latest/download/${NVIM_TARBALL}}"
+
 function usage () {
     echo "Usage: $0 {install|remove} | help"
     echo ""
     echo "Install neovim from the latest binary release tarball."
-    echo "The primary use case is for installing this on linux64 systems."
+    echo "The primary use case is for installing this on Linux x86_64 systems."
     echo ""
     echo "Commands:"
     echo "  install - Install neovim"
@@ -28,7 +49,7 @@ function download_neovim () {
     local nvim_url="$1"
     local nvim_dir="$2"
 
-    curl -Ls "$nvim_url" | tar -C "$nvim_dir" -xzf -
+    curl -fLsS "$nvim_url" | tar -C "$nvim_dir" -xzf -
 }
 
 function remove_neovim () {
@@ -62,7 +83,7 @@ if [ -z "$command" ]; then
     exit 1
 fi
 
-case $command in
+case "$command" in
     install)
         if [ -d "$NVIM_DIR" ]; then
             echo_info "Neovim is already installed"
