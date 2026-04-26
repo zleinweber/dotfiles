@@ -48,6 +48,7 @@ STOW_PACKAGES=(
     tmux
     zsh
     zsh-osx
+    ssh-osx
 )
 
 # yq
