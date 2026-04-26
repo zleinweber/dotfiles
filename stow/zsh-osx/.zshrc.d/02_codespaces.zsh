@@ -11,9 +11,6 @@ Core commands:
   cscreate [gh codespace create args]
       Create a codespace, then refresh ~/.ssh/codespaces.
 
-  cscreate --connect [gh codespace create args]
-      Create a codespace, refresh SSH config, then connect with kitten ssh.
-
   csconf
       Regenerate ~/.ssh/codespaces using:
         gh codespace ssh --config > ~/.ssh/codespaces
@@ -33,7 +30,8 @@ Core commands:
       Delete a codespace, then refresh SSH config.
 
 Typical flow:
-  cscreate --connect --repo OWNER/REPO
+  cscreate --repo OWNER/REPO
+  cssh
   # work in the codespace
   csdelete
 
@@ -50,33 +48,25 @@ cslist() {
 }
 
 cscreate() {
-  local connect=0
-
-  if [[ "$1" == "--connect" ]]; then
-    connect=1
-    shift
-  fi
-
   gh codespace create "$@" || return
 
-  csconf || return
-
-  if (( connect )); then
-    cssh
-  fi
+  csconf
 }
 
 cslogs() {
-  local target="$1"
-  shift || true
+  local target
+
+  if (( $# )) && [[ "$1" != -* ]]; then
+    target="$1"
+    shift || true
+  fi
 
   if [[ -z "$target" ]]; then
-    csconf || return
-
     target="$(
-      grep '^Host ' ~/.ssh/codespaces |
-        awk '{print $2}' |
-        fzf --prompt='codespace logs> '
+      gh codespace list --json name,displayName,state \
+        --jq '.[] | [.name, (.displayName // ""), .state] | @tsv' |
+        fzf --prompt='codespace logs> ' --with-nth=2,3,1 |
+        awk -F'\t' '{print $1}'
     )"
   fi
 
@@ -119,4 +109,3 @@ cssh() {
 csdelete() {
   gh codespace delete "$@" && csconf
 }
-
