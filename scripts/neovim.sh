@@ -37,7 +37,7 @@ function usage () {
     echo "Usage: $0 {install|remove} | help"
     echo ""
     echo "Install neovim from the latest binary release tarball."
-    echo "The primary use case is for installing this on Linux x86_64 systems."
+    echo "Supports Linux x86_64/amd64 and arm64/aarch64 systems."
     echo ""
     echo "Commands:"
     echo "  install - Install neovim"
