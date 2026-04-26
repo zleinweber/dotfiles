@@ -16,7 +16,7 @@ Core commands:
       to a temporary file in ~/.ssh, then atomically
       replacing ~/.ssh/codespaces.
 
-  cssh [codespace]
+  cssh [codespace] [kitten ssh args]
       Refresh SSH config, then connect with kitten ssh.
       If no codespace is given, select one with fzf.
 
@@ -93,6 +93,12 @@ csconf() {
 cssh() {
   local target="$1"
 
+  if (( $# )) && [[ "$1" != -* ]]; then
+    shift || true
+  else
+    target=""
+  fi
+
   csconf || return
 
   if [[ -z "$target" ]]; then
@@ -104,7 +110,7 @@ cssh() {
   fi
 
   [[ -n "$target" ]] || return 1
-  kitten ssh "$target"
+  kitten ssh "$target" "$@"
 }
 
 csdelete() {

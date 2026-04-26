@@ -143,6 +143,12 @@ if "${SETUP_CODEX_CLI}"; then
     ./scripts/codex.sh install
 fi
 
+# codespaces
+if "${SETUP_CODESPACES_SYSTEM:-false}"; then
+    echo_info "Configure Codespaces system settings"
+    ./scripts/codespaces.sh configure
+fi
+
 # macos
 if "${SETUP_MACOS_SYSTEM}"; then
     if [ ! "${SET_MACOS_HOSTNAME}" == "None" ]; then
