@@ -13,6 +13,7 @@ DISABLE_UPDATE_PROMPT=false
 
 plugins=(
     brew
+    fzf
     git
     macos
     poetry
