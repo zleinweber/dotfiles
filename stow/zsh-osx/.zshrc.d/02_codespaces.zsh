@@ -12,8 +12,9 @@ Core commands:
       Create a codespace, then refresh ~/.ssh/codespaces.
 
   csconf
-      Regenerate ~/.ssh/codespaces using:
-        gh codespace ssh --config > ~/.ssh/codespaces
+      Regenerate ~/.ssh/codespaces by writing SSH config
+      to a temporary file in ~/.ssh, then atomically
+      replacing ~/.ssh/codespaces.
 
   cssh [codespace]
       Refresh SSH config, then connect with kitten ssh.
