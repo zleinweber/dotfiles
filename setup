@@ -144,7 +144,7 @@ if "${SETUP_CODEX_CLI}"; then
 fi
 
 # codespaces
-if "${SETUP_CODESPACES_SYSTEM:-false}"; then
+if "${SETUP_CODESPACES_SYSTEM}"; then
     echo_info "Configure Codespaces system settings"
     ./scripts/codespaces.sh configure
 fi
