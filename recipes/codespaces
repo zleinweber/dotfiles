@@ -15,6 +15,7 @@ APT_INSTALL_PACKAGES=(
     bat
     consul
     curl
+    fzf
     git
     iputils-ping
     jq
