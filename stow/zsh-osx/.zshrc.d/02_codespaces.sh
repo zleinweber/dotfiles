@@ -35,6 +35,5 @@ cssh() {
 }
 
 csdelete() {
-  gh codespace delete "$@"
-  csconf
+  gh codespace delete "$@" && csconf
 }
