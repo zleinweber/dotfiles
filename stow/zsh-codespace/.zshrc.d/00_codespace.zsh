@@ -4,6 +4,7 @@ DISABLE_AUTO_UPDATE=true
 DISABLE_UPDATE_PROMPT=true
 
 plugins=(
+    fzf
     git
     vi-mode
 )
