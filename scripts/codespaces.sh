@@ -47,7 +47,10 @@ function configure_codespaces_system () {
 }
 
 ## Main ##
-command="$1"; shift
+command="${1:-}"
+if [ "$#" -gt 0 ]; then
+    shift
+fi
 
 if [ -z "$command" ]; then
     echo_error "Missing argument 'command'"
