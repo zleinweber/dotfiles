@@ -4,8 +4,17 @@ cslist() {
 }
 
 csconf() {
+  local tmp
+
   mkdir -p ~/.ssh
-  gh codespace ssh --config > ~/.ssh/codespaces
+  tmp="$(mktemp ~/.ssh/codespaces.XXXXXX)" || return
+
+  if gh codespace ssh --config > "$tmp"; then
+    mv "$tmp" ~/.ssh/codespaces
+  else
+    rm -f "$tmp"
+    return 1
+  fi
 }
 
 cssh() {
