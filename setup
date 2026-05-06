@@ -127,6 +127,12 @@ if "${SETUP_LAZYGIT}"; then
     ./scripts/lazygit.sh install
 fi
 
+# tree-sitter CLI
+if "${SETUP_TREE_SITTER_CLI}"; then
+    echo_info "Installing tree-sitter CLI"
+    ./scripts/tree-sitter-cli.sh install
+fi
+
 # nvim
 if "${SETUP_NVIM}"; then
     echo_info "Installing the latest nvim binary release"

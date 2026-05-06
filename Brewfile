@@ -16,6 +16,7 @@ brew "ruff"
 brew "shellcheck"
 brew "stow"
 brew "tmux"
+brew "tree-sitter-cli"
 brew "uv"
 brew "wget"
 
