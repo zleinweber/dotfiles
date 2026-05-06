@@ -133,6 +133,12 @@ if "${SETUP_TREE_SITTER_CLI}"; then
     ./scripts/tree-sitter-cli.sh install
 fi
 
+# ripgrep
+if "${SETUP_RIPGREP}"; then
+    echo_info "Installing ripgrep"
+    ./scripts/ripgrep.sh install
+fi
+
 # nvim
 if "${SETUP_NVIM}"; then
     echo_info "Installing the latest nvim binary release"

@@ -33,6 +33,9 @@ SETUP_LAZYGIT=false
 # tree-sitter CLI
 SETUP_TREE_SITTER_CLI=false
 
+# ripgrep
+SETUP_RIPGREP=false
+
 # homebrew configuration
 SETUP_HOMEBREW=true
 HOMEBREW_BUNDLE_FILE="./Brewfile"

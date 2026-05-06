@@ -53,6 +53,9 @@ SETUP_LAZYGIT=true
 # tree-sitter CLI
 SETUP_TREE_SITTER_CLI=true
 
+# ripgrep
+SETUP_RIPGREP=true
+
 # homebrew configuration
 SETUP_HOMEBREW=false
 
