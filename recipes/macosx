@@ -27,6 +27,9 @@ SETUP_CODESPACES_SYSTEM=false
 # hashicorp
 SETUP_HASHI_APT_REPO=false
 
+# lazygit
+SETUP_LAZYGIT=false
+
 # homebrew configuration
 SETUP_HOMEBREW=true
 HOMEBREW_BUNDLE_FILE="./Brewfile"

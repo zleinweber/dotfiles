@@ -121,6 +121,12 @@ if "${SETUP_ATUIN}"; then
     ./scripts/atuin.sh install
 fi
 
+# lazygit
+if "${SETUP_LAZYGIT}"; then
+    echo_info "Installing lazygit"
+    ./scripts/lazygit.sh install
+fi
+
 # nvim
 if "${SETUP_NVIM}"; then
     echo_info "Installing the latest nvim binary release"

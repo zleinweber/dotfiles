@@ -11,15 +11,19 @@ NVIM_FORCE_INSTALL="${NVIM_FORCE_INSTALL:-true}"
 source ./scripts/common.sh
 
 function default_nvim_dist () {
-    case "$(uname -m)" in
-        x86_64|amd64)
+    local arch
+
+    arch="$(detect_arch)" || return 1
+
+    case "$arch" in
+        x86_64)
             echo "nvim-linux-x86_64"
             ;;
-        aarch64|arm64)
+        arm64)
             echo "nvim-linux-arm64"
             ;;
         *)
-            echo_error "Unsupported Neovim architecture: $(uname -m)"
+            echo_error "Unsupported Neovim architecture: $arch"
             return 1
             ;;
     esac

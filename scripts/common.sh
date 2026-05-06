@@ -24,6 +24,36 @@ function echo_error () {
     fi
 }
 
+function detect_platform () {
+    case "$(uname -s)" in
+        Darwin)
+            echo "darwin"
+            ;;
+        Linux)
+            echo "linux"
+            ;;
+        *)
+            echo_error "Unsupported platform: $(uname -s)"
+            return 1
+            ;;
+    esac
+}
+
+function detect_arch () {
+    case "$(uname -m)" in
+        x86_64|amd64)
+            echo "x86_64"
+            ;;
+        aarch64|arm64)
+            echo "arm64"
+            ;;
+        *)
+            echo_error "Unsupported architecture: $(uname -m)"
+            return 1
+            ;;
+    esac
+}
+
 function source_recipe () {
     local recipe_name="$1"
     local recipe_path="${RECIPE_DIR}/${recipe_name}"
