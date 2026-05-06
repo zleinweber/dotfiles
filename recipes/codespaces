@@ -27,6 +27,7 @@ APT_INSTALL_PACKAGES=(
     stow
     terraform
     tmux
+    unzip
     vault
     wget
     zsh
@@ -45,6 +46,15 @@ SETUP_CODESPACES_SYSTEM=true
 
 # hashicorp
 SETUP_HASHI_APT_REPO=true
+
+# lazygit
+SETUP_LAZYGIT=true
+
+# tree-sitter CLI
+SETUP_TREE_SITTER_CLI=true
+
+# ripgrep
+SETUP_RIPGREP=true
 
 # homebrew configuration
 SETUP_HOMEBREW=false

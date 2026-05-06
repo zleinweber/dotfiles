@@ -121,6 +121,24 @@ if "${SETUP_ATUIN}"; then
     ./scripts/atuin.sh install
 fi
 
+# lazygit
+if "${SETUP_LAZYGIT}"; then
+    echo_info "Installing lazygit"
+    ./scripts/lazygit.sh install
+fi
+
+# tree-sitter CLI
+if "${SETUP_TREE_SITTER_CLI}"; then
+    echo_info "Installing tree-sitter CLI"
+    ./scripts/tree-sitter-cli.sh install
+fi
+
+# ripgrep
+if "${SETUP_RIPGREP}"; then
+    echo_info "Installing ripgrep"
+    ./scripts/ripgrep.sh install
+fi
+
 # nvim
 if "${SETUP_NVIM}"; then
     echo_info "Installing the latest nvim binary release"
