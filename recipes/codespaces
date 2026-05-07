@@ -12,25 +12,26 @@
 SETUP_APT=true
 APT_CLEAN=true
 APT_INSTALL_PACKAGES=(
-    bat
-    consul
-    curl
-    fzf
-    git
-    iputils-ping
-    jq
-    just
-    luarocks
-    nomad
-    packer
-    shellcheck
-    stow
-    terraform
-    tmux
-    unzip
-    vault
-    wget
-    zsh
+  bat
+  consul
+  curl
+  fd-find
+  fzf
+  git
+  iputils-ping
+  jq
+  just
+  luarocks
+  nomad
+  packer
+  shellcheck
+  stow
+  terraform
+  tmux
+  unzip
+  vault
+  wget
+  zsh
 )
 APT_REMOVE_PACKAGES=()
 APT_UPGRADE=true
@@ -71,12 +72,12 @@ SUDO_UP_FRONT=false
 
 # stow
 STOW_PACKAGES=(
-    atuin
-    neovim
-    oh-my-zsh
-    tmux
-    zsh
-    zsh-codespace
+  atuin
+  neovim
+  oh-my-zsh
+  tmux
+  zsh
+  zsh-codespace
 )
 
 # yq
