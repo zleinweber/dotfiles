@@ -6,12 +6,13 @@ export DEBIAN_FRONTEND=noninteractive
 source ./scripts/common.sh
 
 function usage () {
-    echo "Usage: $0 configure|shell|help"
+    echo "Usage: $0 configure|fd|shell|help"
     echo ""
     echo "Configure GitHub Codespaces system settings."
     echo ""
     echo "Commands:"
     echo "  configure - Configure all Codespaces system settings"
+    echo "  fd        - Link fd to fdfind when fd-find is installed via apt"
     echo "  shell     - Set the Codespaces user's login shell to zsh"
     echo "  help      - Display this help message"
 }
@@ -42,8 +43,40 @@ function configure_login_shell () {
     sudo chsh -s "$zsh_path" "$user"
 }
 
+function configure_fd_command () {
+    local fd_path="$HOME/.local/bin/fd"
+    local fdfind_path
+
+    if command -v fd >/dev/null 2>&1; then
+        echo_info "fd command already available"
+        return 0
+    fi
+
+    fdfind_path="$(command -v fdfind || true)"
+    if [ -z "$fdfind_path" ]; then
+        echo_warn "Unable to configure fd command because fdfind is not available"
+        return 0
+    fi
+
+    mkdir -p "$HOME/.local/bin"
+
+    if [ -L "$fd_path" ] && [ "$(readlink "$fd_path")" = "$fdfind_path" ]; then
+        echo_info "fd symlink already configured"
+        return 0
+    fi
+
+    if [ -e "$fd_path" ]; then
+        echo_warn "Not replacing existing fd at $fd_path"
+        return 0
+    fi
+
+    echo_info "Linking fd to $fdfind_path"
+    ln -s "$fdfind_path" "$fd_path"
+}
+
 function configure_codespaces_system () {
     configure_login_shell
+    configure_fd_command
 }
 
 ## Main ##
@@ -61,6 +94,9 @@ fi
 case $command in
     configure)
         configure_codespaces_system
+        ;;
+    fd)
+        configure_fd_command
         ;;
     shell)
         configure_login_shell
