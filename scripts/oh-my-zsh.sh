@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 ## Globals ##
 ZSH_INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
 
 ## Functions ##
-source ./scripts/common.sh
+# shellcheck source=scripts/common.sh
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/common.sh"
 
 function usage () {
     echo "Usage: $0 install|help"
@@ -22,16 +25,16 @@ function install () {
         return
     fi
     echo_info "Installing oh-my-zsh via curl bash: $ZSH_INSTALL_SCRIPT_URL"
-    /bin/bash -c "$(curl -fsSL "$ZSH_INSTALL_SCRIPT_URL")"
+    local installer
+    installer="$(curl -fsSL "$ZSH_INSTALL_SCRIPT_URL")"
+    /bin/bash -c "$installer"
 }
 
 ## Main ##
-command="$1"
-
-if [ -z "$command" ]; then
-    echo_error "Missing argument 'command'"
-    usage
-    exit 1
+parse_command "install:0" "$@"
+command="${1:-help}"
+if [ "$#" -gt 0 ]; then
+    shift
 fi
 
 case $command in

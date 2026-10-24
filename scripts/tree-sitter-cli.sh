@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 
-set -o pipefail
+set -euo pipefail
 
 ## Globals ##
 TREE_SITTER_CLI_VERSION="${TREE_SITTER_CLI_VERSION:-latest}"
 TREE_SITTER_CLI_INSTALL_DIR="${TREE_SITTER_CLI_INSTALL_DIR:-/usr/local/bin}"
-TREE_SITTER_CLI_FORCE_INSTALL="${TREE_SITTER_CLI_FORCE_INSTALL:-true}"
+TREE_SITTER_CLI_FORCE_INSTALL="${TREE_SITTER_CLI_FORCE_INSTALL:-false}"
 
 ## Functions ##
-source ./scripts/common.sh
+# shellcheck source=scripts/common.sh
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/common.sh"
 
 function usage () {
     echo "Usage: $0 {install|remove} | help"
@@ -19,7 +20,7 @@ function usage () {
     echo "Environment:"
     echo "  TREE_SITTER_CLI_VERSION       Release version to install, or latest (default: latest)"
     echo "  TREE_SITTER_CLI_INSTALL_DIR   Directory for tree-sitter binary (default: /usr/local/bin)"
-    echo "  TREE_SITTER_CLI_FORCE_INSTALL Reinstall when tree-sitter already exists (default: true)"
+    echo "  TREE_SITTER_CLI_FORCE_INSTALL Reinstall when tree-sitter already exists (default: false)"
     echo ""
     echo "Commands:"
     echo "  install - Install tree-sitter CLI"
@@ -111,7 +112,7 @@ function install_tree_sitter_cli () {
 
     if check_if_tree_sitter_cli_installed "$tree_sitter_cli_install_dir"; then
         echo_info "tree-sitter CLI is already installed"
-        if "$TREE_SITTER_CLI_FORCE_INSTALL"; then
+        if is_true "$TREE_SITTER_CLI_FORCE_INSTALL"; then
             echo_info "Forcing re-installation"
         else
             exit 0
@@ -149,12 +150,10 @@ function remove_tree_sitter_cli () {
 }
 
 ## Main ##
-command="$1"
-
-if [ -z "$command" ]; then
-    echo_error "Missing argument 'command'"
-    usage
-    exit 1
+parse_command "install:0 remove:0" "$@"
+command="${1:-help}"
+if [ "$#" -gt 0 ]; then
+    shift
 fi
 
 case "$command" in

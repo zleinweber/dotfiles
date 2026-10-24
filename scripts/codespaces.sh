@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 export DEBIAN_FRONTEND=noninteractive
 
 ## Functions ##
-source ./scripts/common.sh
+# shellcheck source=scripts/common.sh
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/common.sh"
 
 function usage () {
     echo "Usage: $0 configure|fd|shell|help"
@@ -80,15 +83,10 @@ function configure_codespaces_system () {
 }
 
 ## Main ##
-command="${1:-}"
+parse_command "configure:0 fd:0 shell:0" "$@"
+command="${1:-help}"
 if [ "$#" -gt 0 ]; then
     shift
-fi
-
-if [ -z "$command" ]; then
-    echo_error "Missing argument 'command'"
-    usage
-    exit 1
 fi
 
 case $command in

@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 export DEBIAN_FRONTEND=noninteractive
 
 ## Functions ##
-source ./scripts/common.sh
+# shellcheck source=scripts/common.sh
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/common.sh"
 
 function usage () {
-    echo "Usage: $0 defaults|hostname|help"
+    echo "Usage: $0 configure | hostname <name> | help"
     echo ""
     echo "Configure various MacOS System Settings in an attempt to automate as"
     echo "much of system set as possible. This is inspired by:"
@@ -68,10 +71,10 @@ function set_hostname () {
     local current_localhostname
     local current_netbiosname
 
-    current_hostname=$(scutil --get HostName)
-    current_computername=$(scutil --get ComputerName)
-    current_localhostname=$(scutil --get LocalHostName)
-    current_netbiosname=$(defaults read /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName)
+    current_hostname=$(scutil --get HostName 2>/dev/null || true)
+    current_computername=$(scutil --get ComputerName 2>/dev/null || true)
+    current_localhostname=$(scutil --get LocalHostName 2>/dev/null || true)
+    current_netbiosname=$(defaults read /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName 2>/dev/null || true)
 
     if [ "$current_hostname" = "$hostname" ] && \
         [ "$current_computername" = "$hostname" ] && \
@@ -89,12 +92,10 @@ function set_hostname () {
 }
 
 ## Main ##
-command="$1"; shift
-
-if [ -z "$command" ]; then
-    echo_error "Missing argument 'command'"
-    usage
-    exit 1
+parse_command "configure:0 hostname:1" "$@"
+command="${1:-help}"
+if [ "$#" -gt 0 ]; then
+    shift
 fi
 
 case $command in

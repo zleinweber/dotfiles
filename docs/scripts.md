@@ -1,0 +1,90 @@
+# Script interface
+
+Task modules in `scripts/` expose a command-line interface, not exported shell
+functions. `setup` executes them as child processes. Keep implementation functions
+private to each script; only `common.sh` is intended to be sourced. `validate.sh`
+is a developer command with no subcommands, and recipes are sourced configuration.
+
+## Public contract
+
+- Use Bash (`#!/usr/bin/env bash`) with `set -euo pipefail`. Preserve compatibility
+  with macOS Bash 3.2 (no associative arrays or newer Bash-only syntax).
+- Support `help`, `-h`, `--help`, and no arguments: print usage to stdout and exit
+  zero, without checking dependencies, detecting architecture, downloading, or
+  modifying anything.
+- Validate the command and its argument count before side effects. Unknown commands,
+  missing operands, or extra operands print a diagnostic and usage to stderr and
+  exit nonzero. Positional operands are command-specific; there are no global flags
+  other than help.
+- Use `install` for tool installation, `remove` when removal is supported, and
+  `configure` for system configuration. Other actions should have descriptive names
+  (`bundle`, `hostname`, `upgrade`, etc.). Not every module needs every command.
+- Exit zero for success, including an already-satisfied request. Propagate failures;
+  explicitly handle expected failures locally. Do not wrap an entire operation in
+  an `if`/`!` check that suppresses Bash's `errexit` inside its functions.
+- Source `common.sh` relative to the script, so commands work from any working
+  directory. Resolve repository-owned defaults with `DOTFILES_ROOT`; explicit
+  relative path overrides are relative to the caller's directory. `setup` runs its
+  tasks from the repository root.
+- Accept configuration through environment variables named for the tool, with
+  defaults using `${VAR:-default}`. Describe public overrides in usage or nearby
+  documentation. Recipe assignments used by child scripts must be exported or
+  passed explicitly; ordinary recipe variables only exist in `setup`.
+- Use literal `true` and `false` for booleans and evaluate them with `is_true`.
+  Invalid evaluated values fail rather than being executed as shell commands.
+- Prefer convergence on reruns. Binary installers with `*_FORCE_INSTALL` default
+  to `false`; explicitly set it to `true` to reinstall/update. Package-manager
+  upgrades remain explicit commands. This does not pin upstream versions.
+- Use `echo_info`, `echo_warn`, and `echo_error` for diagnostics (stderr), controlled
+  by `VERBOSITY` (0 silent, 1 errors, 2 warnings, 3 info; default 3). Reserve stdout
+  for usage, returned values, and underlying command output.
+- Check operation-specific dependencies after argument validation. Quote paths and
+  operand arrays. Use `sudo` only for operations requiring elevated access.
+
+## Minimal module
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+# shellcheck source=scripts/common.sh
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/common.sh"
+
+function usage () {
+    echo "Usage: $0 install | help"
+    echo "  install - Install example if missing"
+}
+
+function install_example () {
+    if command -v example >/dev/null 2>&1; then
+        echo_info "example is already installed"
+        return 0
+    fi
+    # Check dependencies and install; failures must propagate.
+}
+
+parse_command "install:0" "$@"
+command="$1"
+shift
+case "$command" in
+    install) install_example ;;
+esac
+```
+
+`parse_command` takes a quoted, space-separated list of `command:arity`
+declarations followed by the original argument vector. `install:0` accepts no operands, `hostname:1` takes
+exactly one, and `install:1+` takes one or more. It exits for help or invalid input,
+so the dispatcher only sees valid operations.
+
+`common.sh` also provides logging, platform/architecture detection, recipe loading,
+and sudo credential caching. Sourcing it must not dispatch an operation or change
+shell options in its caller.
+
+## Validation
+
+Run `./scripts/validate.sh` (or `just validate`) with ShellCheck installed. It checks
+syntax for each script and recipe, runs ShellCheck, and executes
+`tests/scripts.sh`. The interface tests run from outside the repository and do not
+install packages or change system configuration. They do not validate upstream
+installers or prove full platform idempotence; test those in disposable target
+machines when changing installation behavior.

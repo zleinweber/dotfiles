@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 ## Globals ##
 export DEBIAN_FRONTEND=noninteractive
 
 ## Functions ##
-source ./scripts/common.sh
+# shellcheck source=scripts/common.sh
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/common.sh"
 
 function usage () {
     echo "Usage: $0 {install|remove} <package...> | {clean|upgrade|help}"
@@ -26,7 +29,7 @@ function check_if_apt_installed () {
     fi
 }
 
-function manage_apt_pacakges () {
+function manage_apt_packages () {
     local operation="$1"; shift
     local packages=("$@")
 
@@ -42,7 +45,7 @@ function manage_apt_pacakges () {
         exit 1
     fi
 
-    if [[ ! $operation =~ install|remove ]]; then
+    if [[ ! $operation =~ ^(install|remove)$ ]]; then
         echo_error "Invalid operation '$operation'"
         usage
         exit 1
@@ -67,18 +70,23 @@ function apt_upgrade () {
 }
 
 ## Main ##
+parse_command "clean:0 install:1+ remove:1+ upgrade:0" "$@"
+command="${1:-help}"
+if [ "$#" -gt 0 ]; then
+    shift
+fi
+
 check_if_apt_installed
-command="$1"; shift
 
 case $command in
     clean)
         cleanup_apt
         ;;
     install)
-        manage_apt_pacakges install "$@"
+        manage_apt_packages install "$@"
         ;;
     remove)
-        manage_apt_pacakges  remove "$@"
+        manage_apt_packages  remove "$@"
         ;;
     upgrade)
         apt_upgrade

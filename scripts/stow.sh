@@ -1,12 +1,18 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
+# shellcheck source=scripts/common.sh
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/common.sh"
+
 ## Globals ##
-STOW_DIR="${STOW_DIR:-./stow}"
+STOW_DIR="${STOW_DIR:-$DOTFILES_ROOT/stow}"
 STOW_TARGET_DIR="${STOW_TARGET_DIR:-$HOME}"
 STOW_CONFLICT="${STOW_CONFLICT:-backup}"
 STOW_CONFLICTS_DIR="${STOW_CONFLICTS_DIR:-$HOME/.stow_conflicts}"
 
 ## Functions ##
+
 function usage () {
     echo "Usage: $0 {install|remove} <package...> | help"
     echo ""
@@ -81,7 +87,8 @@ function install_package () {
         echo "Installing package: $package"
         stow --dir="$STOW_DIR" --target="$STOW_TARGET_DIR" "$package"
     else
-        echo "WARNING: package not found '$package'"
+        echo_error "Package not found: $package"
+        return 1
     fi
 }
 
@@ -93,23 +100,22 @@ function install () {
 }
 
 ## Main ##
-command="$1"
-
-if [ -z "$command" ]; then
-    echo "ERROR: Missing argument 'command'"
-    usage
-    exit 1
+parse_command "install:1+ remove:1+" "$@"
+command="${1:-help}"
+if [ "$#" -gt 0 ]; then
+    shift
 fi
 
 case $command in
     install)
-        shift
         check_for_required_deps stow find
+        for package in "$@"; do
+            [ -d "$STOW_DIR/$package" ] || { echo_error "Package not found: $package"; exit 1; }
+        done
         manage_conflicts "$@"
         install "$@"
         ;;
     remove)
-        shift
         check_for_required_deps stow
         for package in "$@"; do
             echo "Removing package: $package"

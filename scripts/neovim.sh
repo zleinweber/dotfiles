@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 
-set -o pipefail
+set -euo pipefail
 
 ## Globals ##
 NVIM_INSTALL_DIR="${NVIM_INSTALL_DIR:-/opt}"
 NVIM_STOW_DIR="${NVIM_STOW_DIR:-/usr/local}"
-NVIM_FORCE_INSTALL="${NVIM_FORCE_INSTALL:-true}"
+NVIM_FORCE_INSTALL="${NVIM_FORCE_INSTALL:-false}"
 
 ## Functions ##
-source ./scripts/common.sh
+# shellcheck source=scripts/common.sh
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/common.sh"
 
 function default_nvim_dist () {
     local arch
@@ -28,14 +29,6 @@ function default_nvim_dist () {
             ;;
     esac
 }
-
-if [ -z "${NVIM_DIST:-}" ]; then
-    NVIM_DIST="$(default_nvim_dist)" || exit 1
-fi
-
-NVIM_DIR="${NVIM_INSTALL_DIR}/${NVIM_DIST}"
-NVIM_TARBALL="${NVIM_DIST}.tar.gz"
-NVIM_TARBALL_URL="${NVIM_TARBALL_URL:-https://github.com/neovim/neovim/releases/latest/download/${NVIM_TARBALL}}"
 
 function usage () {
     echo "Usage: $0 {install|remove} | help"
@@ -79,19 +72,25 @@ function unstow_neovim () {
 }
 
 ## Main ##
-command="$1"
-
-if [ -z "$command" ]; then
-    echo_error "Missing argument 'command'"
-    usage
-    exit 1
+parse_command "install:0 remove:0" "$@"
+command="${1:-help}"
+if [ "$#" -gt 0 ]; then
+    shift
 fi
+
+if [ -z "${NVIM_DIST:-}" ]; then
+    NVIM_DIST="$(default_nvim_dist)" || exit 1
+fi
+
+NVIM_DIR="${NVIM_INSTALL_DIR}/${NVIM_DIST}"
+NVIM_TARBALL="${NVIM_DIST}.tar.gz"
+NVIM_TARBALL_URL="${NVIM_TARBALL_URL:-https://github.com/neovim/neovim/releases/latest/download/${NVIM_TARBALL}}"
 
 case "$command" in
     install)
         if [ -d "$NVIM_DIR" ]; then
             echo_info "Neovim is already installed"
-            if "$NVIM_FORCE_INSTALL"; then
+            if is_true "$NVIM_FORCE_INSTALL"; then
                 echo_info "Forcing re-installation"
                 unstow_neovim "$NVIM_INSTALL_DIR" "$NVIM_STOW_DIR" "$NVIM_DIST"
                 remove_neovim "$NVIM_DIR"
