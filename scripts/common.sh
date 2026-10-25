@@ -77,3 +77,50 @@ function sudo_up_front () {
         done 2>/dev/null &
     fi
 }
+
+# Library only: do not set shell options or dispatch commands here.
+# shellcheck disable=SC2034 # Used by task scripts sourcing this library.
+DOTFILES_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+
+function is_true () {
+    case "${1:-false}" in
+        true) return 0 ;;
+        false) return 1 ;;
+        *) echo_error "Expected true or false, got: $1"; exit 1 ;;
+    esac
+}
+
+# First argument is a space-separated list of command:arity specs, then argv.
+function parse_command () {
+    local specs="$1" spec name arity count
+    shift
+    local args=("$@")
+    if [ "${#args[@]}" -eq 0 ]; then
+        usage
+        exit 0
+    fi
+    case "${args[0]}" in
+        help|-h|--help)
+            if [ "${#args[@]}" -eq 1 ]; then
+                usage
+                exit 0
+            fi
+            ;;
+        *)
+            count=$((${#args[@]} - 1))
+            for spec in $specs; do
+                name="${spec%%:*}"
+                arity="${spec#*:}"
+                [ "${args[0]}" = "$name" ] || continue
+                case "$arity" in
+                    *+) [ "$count" -ge "${arity%+}" ] && return 0 ;;
+                    *) [ "$count" -eq "$arity" ] && return 0 ;;
+                esac
+                break
+            done
+            ;;
+    esac
+    echo_error "Invalid command or arguments: ${args[*]}"
+    usage >&2
+    exit 1
+}

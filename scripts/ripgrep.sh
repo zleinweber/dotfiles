@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 
-set -o pipefail
+set -euo pipefail
 
 ## Globals ##
 RIPGREP_VERSION="${RIPGREP_VERSION:-latest}"
 RIPGREP_INSTALL_DIR="${RIPGREP_INSTALL_DIR:-/usr/local/bin}"
-RIPGREP_FORCE_INSTALL="${RIPGREP_FORCE_INSTALL:-true}"
+RIPGREP_FORCE_INSTALL="${RIPGREP_FORCE_INSTALL:-false}"
 
 ## Functions ##
-source ./scripts/common.sh
+# shellcheck source=scripts/common.sh
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/common.sh"
 
 function usage () {
     echo "Usage: $0 {install|remove} | help"
@@ -19,7 +20,7 @@ function usage () {
     echo "Environment:"
     echo "  RIPGREP_VERSION       Release version to install, or latest (default: latest)"
     echo "  RIPGREP_INSTALL_DIR   Directory for rg binary (default: /usr/local/bin)"
-    echo "  RIPGREP_FORCE_INSTALL Reinstall when rg already exists (default: true)"
+    echo "  RIPGREP_FORCE_INSTALL Reinstall when rg already exists (default: false)"
     echo ""
     echo "Commands:"
     echo "  install - Install ripgrep"
@@ -109,7 +110,7 @@ function install_ripgrep () {
 
     if check_if_ripgrep_installed "$ripgrep_install_dir"; then
         echo_info "ripgrep is already installed"
-        if "$RIPGREP_FORCE_INSTALL"; then
+        if is_true "$RIPGREP_FORCE_INSTALL"; then
             echo_info "Forcing re-installation"
         else
             exit 0
@@ -143,12 +144,10 @@ function remove_ripgrep () {
 }
 
 ## Main ##
-command="$1"
-
-if [ -z "$command" ]; then
-    echo_error "Missing argument 'command'"
-    usage
-    exit 1
+parse_command "install:0 remove:0" "$@"
+command="${1:-help}"
+if [ "$#" -gt 0 ]; then
+    shift
 fi
 
 case "$command" in

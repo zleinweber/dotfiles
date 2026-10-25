@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 ## Globals ##
 YQ_BINARY="${YQ_BINARY:-yq_linux_amd64}"
+YQ_FORCE_INSTALL="${YQ_FORCE_INSTALL:-false}"
 YQ_VERSION="${YQ_VERSION:-v4.45.1}"
 YQ_INSTALL_DIR="${YQ_INSTALL_DIR:-/usr/local/bin}"
 
 ## Functions ##
-source ./scripts/common.sh
+# shellcheck source=scripts/common.sh
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/common.sh"
 
 function usage () {
     echo "Usage: $0 {install|remove} | help"
@@ -26,6 +30,13 @@ function install () {
     local yq_install_dir="$3"
     local yq_download_url="https://github.com/mikefarah/yq/releases/download/${yq_version}/${yq_binary}.tar.gz"
 
+    if [ -x "$yq_install_dir/yq" ]; then
+        if ! is_true "$YQ_FORCE_INSTALL"; then
+            echo_info "yq is already installed"
+            return 0
+        fi
+    fi
+
     wget "$yq_download_url" -O - | sudo tar -C "$yq_install_dir" -xz \
         && sudo mv "${yq_install_dir}/${yq_binary}" "${yq_install_dir}/yq" \
         && sudo chmod 0775 "${yq_install_dir}/yq"
@@ -38,12 +49,10 @@ function remove_yq () {
 }
 
 ## Main ##
-command="$1"
-
-if [ -z "$command" ]; then
-    echo_error "Missing argument 'command'"
-    usage
-    exit 1
+parse_command "install:0 remove:0" "$@"
+command="${1:-help}"
+if [ "$#" -gt 0 ]; then
+    shift
 fi
 
 case "$command" in

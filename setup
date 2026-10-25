@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-set -u
+set -euo pipefail
 
 ## Globals ##
-RECIPE_DIR="${RECIPE_DIR:-./recipes}"
+DOTFILES_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+cd "$DOTFILES_ROOT"
+RECIPE_DIR="${RECIPE_DIR:-$DOTFILES_ROOT/recipes}"
 TARGET_RECIPE_NAME="${1:-${TARGET_RECIPE_NAME:-}}"
 
 ## functions ##
@@ -29,7 +31,7 @@ else
             platform_recipe="macosx"
             ;;
         Linux)
-            if "$CODESPACES"; then
+            if is_true "$CODESPACES"; then
                 platform_recipe="codespaces"
             else
                 platform_recipe="linux"
@@ -51,32 +53,32 @@ if ! source_recipe "$recipe_to_source"; then
 fi
 
 # sudo
-if "${SUDO_UP_FRONT}"; then
+if is_true "${SUDO_UP_FRONT}"; then
     echo_info "Requesting sudo password to cache credentials for script run duration"
     sudo_up_front
 fi
 
 # zsh
-if "${SETUP_ZSH}"; then
+if is_true "${SETUP_ZSH}"; then
     echo_info "Configure zsh"
 
     mkdir -p "$HOME/.zshrc.d"
     mkdir -p "$HOME/.local/share/zsh/completions"
 
-    if "${SETUP_OH_MY_ZSH}"; then
+    if is_true "${SETUP_OH_MY_ZSH}"; then
         echo_info "Install oh-my-zsh"
         ./scripts/oh-my-zsh.sh install
     fi
 fi
 
 # hashicorp
-if "${SETUP_HASHI_APT_REPO}"; then
+if is_true "${SETUP_HASHI_APT_REPO}"; then
     echo_info "Configure the HashiCorp apt repository"
     ./scripts/hashi_apt_repo.sh configure
 fi
 
 # apt
-if "${SETUP_APT}"; then
+if is_true "${SETUP_APT}"; then
     echo_info "Install / remove / upgrade apt packages"
 
     if [ -n "${APT_INSTALL_PACKAGES[*]:-}" ]; then
@@ -87,17 +89,17 @@ if "${SETUP_APT}"; then
         ./scripts/apt.sh remove "${APT_REMOVE_PACKAGES[@]}"
     fi
 
-    if "${APT_UPGRADE}"; then
+    if is_true "${APT_UPGRADE}"; then
         ./scripts/apt.sh upgrade
     fi
 
-    if "${APT_CLEAN}"; then
+    if is_true "${APT_CLEAN}"; then
         ./scripts/apt.sh clean
     fi
 fi
 
 # homebrew
-if "${SETUP_HOMEBREW}"; then
+if is_true "${SETUP_HOMEBREW}"; then
     echo_info "Install and configure homebrew"
 
     ./scripts/homebrew.sh install
@@ -105,7 +107,7 @@ if "${SETUP_HOMEBREW}"; then
 
     if [ -f "${HOMEBREW_BUNDLE_FILE:-}" ]; then
         echo_info "Install homebrew bundle"
-        ./scripts/homebrew.sh bundle
+        HOMEBREW_BUNDLE_FILE="$HOMEBREW_BUNDLE_FILE" ./scripts/homebrew.sh bundle
     fi
 fi
 
@@ -116,59 +118,59 @@ if [ -n "${STOW_PACKAGES[*]:-}" ]; then
 fi
 
 # atuin
-if "${SETUP_ATUIN}"; then
+if is_true "${SETUP_ATUIN}"; then
     echo_info "Setting up atuin"
     ./scripts/atuin.sh install
 fi
 
 # lazygit
-if "${SETUP_LAZYGIT}"; then
+if is_true "${SETUP_LAZYGIT}"; then
     echo_info "Installing lazygit"
     ./scripts/lazygit.sh install
 fi
 
 # tree-sitter CLI
-if "${SETUP_TREE_SITTER_CLI}"; then
+if is_true "${SETUP_TREE_SITTER_CLI}"; then
     echo_info "Installing tree-sitter CLI"
     ./scripts/tree-sitter-cli.sh install
 fi
 
 # ripgrep
-if "${SETUP_RIPGREP}"; then
+if is_true "${SETUP_RIPGREP}"; then
     echo_info "Installing ripgrep"
     ./scripts/ripgrep.sh install
 fi
 
 # nvim
-if "${SETUP_NVIM}"; then
+if is_true "${SETUP_NVIM}"; then
     echo_info "Installing the latest nvim binary release"
     ./scripts/neovim.sh install
 fi
 
 # yq
-if "${SETUP_YQ}"; then
+if is_true "${SETUP_YQ}"; then
     echo_info "Installing yq"
     ./scripts/yq.sh install
 fi
 
-if "${SETUP_ASTRAL_SH_TOOLS}"; then
+if is_true "${SETUP_ASTRAL_SH_TOOLS}"; then
     echo_info "Installing astral sh tooling"
     ./scripts/astral.sh install
 fi
 
-if "${SETUP_CODEX_CLI}"; then
+if is_true "${SETUP_CODEX_CLI}"; then
     echo_info "Installing codex cli"
     ./scripts/codex.sh install
 fi
 
 # codespaces
-if "${SETUP_CODESPACES_SYSTEM}"; then
+if is_true "${SETUP_CODESPACES_SYSTEM}"; then
     echo_info "Configure Codespaces system settings"
     ./scripts/codespaces.sh configure
 fi
 
 # macos
-if "${SETUP_MACOS_SYSTEM}"; then
+if is_true "${SETUP_MACOS_SYSTEM}"; then
     if [ ! "${SET_MACOS_HOSTNAME}" == "None" ]; then
         echo_info "Set macOS hostname to: ${SET_MACOS_HOSTNAME}"
         ./scripts/macos.sh hostname "${SET_MACOS_HOSTNAME}"

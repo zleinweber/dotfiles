@@ -94,6 +94,8 @@ The environment variables set in a recipe are used to inform things like:
 
 ### scripts/
 
+See [the script interface](./docs/scripts.md) for the required CLI contract, configuration conventions, and a module template.
+
 A directory that contains `scripts` that do specific things. For example, the `scripts/homebrew.sh` script can be used to install the homebrew package manager. Each of these scripts should take one or more sub-commands (e.g. `scripts/homebrew.sh install`). Omitting a sub-command should cause the script to output help text. For example:
 
 ```text

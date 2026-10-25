@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 ## Globals ##
 HOMEBREW_INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
 
 ## Functions ##
-source ./scripts/common.sh
+# shellcheck source=scripts/common.sh
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/common.sh"
 
 function usage () {
     echo "Usage: $0 install|bundle|help"
@@ -30,13 +33,15 @@ function install () {
         echo_info "Homebrew is already installed"
     else
         echo_info "Installing homebrew via curl bash: $HOMEBREW_INSTALL_SCRIPT_URL"
-        /bin/bash -c "$(curl -fsSL "$HOMEBREW_INSTALL_SCRIPT_URL")"
+        local installer
+    installer="$(curl -fsSL "$HOMEBREW_INSTALL_SCRIPT_URL")"
+    /bin/bash -c "$installer"
     fi
 }
 
 function bundle () {
     if check_if_brew_is_installed; then
-        brew bundle
+        brew bundle --file="${HOMEBREW_BUNDLE_FILE:-$DOTFILES_ROOT/Brewfile}"
     else
         echo_error "brew is not installed"
         return 1
@@ -44,12 +49,10 @@ function bundle () {
 }
 
 ## Main ##
-command="$1"
-
-if [ -z "$command" ]; then
-    echo_error "Missing argument 'command'"
-    usage
-    exit 1
+parse_command "install:0 bundle:0" "$@"
+command="${1:-help}"
+if [ "$#" -gt 0 ]; then
+    shift
 fi
 
 case $command in

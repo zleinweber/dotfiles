@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 
-set -o pipefail
+set -euo pipefail
 
 ## Globals ##
 LAZYGIT_VERSION="${LAZYGIT_VERSION:-latest}"
 LAZYGIT_INSTALL_DIR="${LAZYGIT_INSTALL_DIR:-/usr/local/bin}"
-LAZYGIT_FORCE_INSTALL="${LAZYGIT_FORCE_INSTALL:-true}"
+LAZYGIT_FORCE_INSTALL="${LAZYGIT_FORCE_INSTALL:-false}"
 
 ## Functions ##
-source ./scripts/common.sh
+# shellcheck source=scripts/common.sh
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/common.sh"
 
 function usage () {
     echo "Usage: $0 {install|remove} | help"
@@ -19,7 +20,7 @@ function usage () {
     echo "Environment:"
     echo "  LAZYGIT_VERSION       Release version to install, or latest (default: latest)"
     echo "  LAZYGIT_INSTALL_DIR   Directory for lazygit binary (default: /usr/local/bin)"
-    echo "  LAZYGIT_FORCE_INSTALL Reinstall when lazygit already exists (default: true)"
+    echo "  LAZYGIT_FORCE_INSTALL Reinstall when lazygit already exists (default: false)"
     echo ""
     echo "Commands:"
     echo "  install - Install lazygit"
@@ -91,7 +92,7 @@ function install_lazygit () {
 
     if check_if_lazygit_installed "$lazygit_install_dir"; then
         echo_info "lazygit is already installed"
-        if "$LAZYGIT_FORCE_INSTALL"; then
+        if is_true "$LAZYGIT_FORCE_INSTALL"; then
             echo_info "Forcing re-installation"
         else
             exit 0
@@ -115,12 +116,10 @@ function remove_lazygit () {
 }
 
 ## Main ##
-command="$1"
-
-if [ -z "$command" ]; then
-    echo_error "Missing argument 'command'"
-    usage
-    exit 1
+parse_command "install:0 remove:0" "$@"
+command="${1:-help}"
+if [ "$#" -gt 0 ]; then
+    shift
 fi
 
 case "$command" in
