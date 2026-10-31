@@ -9,6 +9,7 @@ plugins=(
     vi-mode
 )
 
-if [ -d "$HOME/.atuin/bin" ]; then
-    export PATH="$PATH:$HOME/.atuin/bin"
-fi  
+# Use this installation when no earlier directory provides atuin.
+if [[ -d "$HOME/.atuin/bin" ]]; then
+    path+=("$HOME/.atuin/bin")
+fi
