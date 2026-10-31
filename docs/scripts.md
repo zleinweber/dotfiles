@@ -121,3 +121,27 @@ sudo env NVIM_INSTALL_DIR=/opt NVIM_STOW_DIR=/usr/local ./scripts/neovim.sh remo
 Use the old `NVIM_DIST` override too if that installation used a nondefault
 distribution name. Do not run the whole setup as root. Open a new Zsh session
 after updating the shell configuration, or add `~/.local/bin` to the current PATH.
+
+## Codex installation
+
+`scripts/codex.sh install` downloads the standalone Codex binary from the latest
+official GitHub release and installs it as `~/.local/bin/codex`, without Node,
+npm, or sudo. It selects the Linux musl or macOS archive for x86_64 or arm64.
+The shared Zsh configuration already includes `~/.local/bin` on PATH.
+
+An executable at the destination or a `codex` command already on PATH is left
+alone by default. Set `CODEX_FORCE_INSTALL=true` to download again and replace
+the configured destination. Other installations elsewhere on PATH are not
+removed. `CODEX_INSTALL_DIR` overrides the writable destination directory, and
+`CODEX_TARBALL_URL` can select a pinned release URL or a mirror containing the
+expected platform-specific archive member.
+
+Downloads and extraction complete in a temporary directory on the destination
+filesystem before the executable is atomically replaced. Failures preserve the
+existing executable and clean up staging files. Downloads use HTTPS with curl's
+normal TLS verification; this installer does not independently verify release
+checksums or signatures. The default latest-release URL is not version-pinned.
+
+Validation runs `tests/codex.sh` with local fixture archives to cover platform
+selection, reruns, overrides, failed downloads, corrupt/incomplete archives,
+replacement, and conflicting destinations without running npm or sudo.
