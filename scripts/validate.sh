@@ -12,3 +12,4 @@ else
     exit 1
 fi
 bash tests/scripts.sh
+bash tests/neovim.sh

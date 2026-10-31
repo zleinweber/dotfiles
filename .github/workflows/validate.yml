@@ -9,6 +9,6 @@ jobs:
         steps:
             - uses: actions/checkout@v6
             - run: sudo apt-get update
-            - run: sudo apt-get install -y shellcheck
+            - run: sudo apt-get install -y shellcheck stow
             - name: Validate shell scripts
               run: ./scripts/validate.sh

@@ -88,3 +88,36 @@ syntax for each script and recipe, runs ShellCheck, and executes
 install packages or change system configuration. They do not validate upstream
 installers or prove full platform idempotence; test those in disposable target
 machines when changing installation behavior.
+
+Validation also runs `tests/neovim.sh` with GNU Stow installed. It uses local
+fixture archives and a temporary home to test installation, link repair, failed
+downloads, replacement, conflicts, and removal without network access or sudo.
+
+## Neovim installation
+
+On Linux, `scripts/neovim.sh install` downloads the upstream archive into a
+temporary staging directory and installs it under
+`~/.local/stow/nvim-linux-<architecture>`. GNU Stow links its `bin`, `lib`, and
+`share` contents into `~/.local`; the executable is `~/.local/bin/nvim`. No sudo
+is used. The shared Zsh configuration puts `~/.local/bin` first on PATH; other
+shells need the same PATH entry.
+
+Rerunning install repairs missing links without downloading again. Set
+`NVIM_FORCE_INSTALL=true` to fetch and replace the package. Downloads must finish
+and contain the executable and runtime before replacing an existing installation.
+This is not a fully transactional upgrade: a subsequent filesystem or Stow failure
+can still require rerunning install. `remove` unlinks the package and deletes its
+installation directory, leaving unrelated files alone.
+
+`NVIM_INSTALL_DIR` and `NVIM_STOW_DIR` can select other writable package and
+target directories. Existing `/opt` installations are not migrated or deleted
+automatically. After verifying the new user installation, an old default system
+installation can be explicitly removed with:
+
+```sh
+sudo env NVIM_INSTALL_DIR=/opt NVIM_STOW_DIR=/usr/local ./scripts/neovim.sh remove
+```
+
+Use the old `NVIM_DIST` override too if that installation used a nondefault
+distribution name. Do not run the whole setup as root. Open a new Zsh session
+after updating the shell configuration, or add `~/.local/bin` to the current PATH.

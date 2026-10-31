@@ -3,8 +3,8 @@
 set -euo pipefail
 
 ## Globals ##
-NVIM_INSTALL_DIR="${NVIM_INSTALL_DIR:-/opt}"
-NVIM_STOW_DIR="${NVIM_STOW_DIR:-/usr/local}"
+NVIM_INSTALL_DIR="${NVIM_INSTALL_DIR:-$HOME/.local/stow}"
+NVIM_STOW_DIR="${NVIM_STOW_DIR:-$HOME/.local}"
 NVIM_FORCE_INSTALL="${NVIM_FORCE_INSTALL:-false}"
 
 ## Functions ##
@@ -40,6 +40,14 @@ function usage () {
     echo "  install - Install neovim"
     echo "  remove  - Remove neovim"
     echo "  help    - Display this help message"
+    echo ""
+    echo "Configuration (directories must be writable by the current user):"
+    echo "  NVIM_INSTALL_DIR    Package directory (default: ~/.local/stow)"
+    echo "  NVIM_STOW_DIR       Link target prefix (default: ~/.local)"
+    echo "  NVIM_FORCE_INSTALL  Reinstall/update when true (default: false)"
+    echo "  NVIM_DIST           Archive directory name (default: detected Linux architecture)"
+    echo "  NVIM_TARBALL_URL    Override the release archive URL"
+    echo "Put the target prefix's bin directory on PATH (default: ~/.local/bin)."
 }
 
 function download_neovim () {
@@ -52,7 +60,7 @@ function download_neovim () {
 function remove_neovim () {
     local nvim_dir="$1"
 
-    sudo rm -rf "$nvim_dir"
+    rm -rf -- "$nvim_dir"
 }
 
 function stow_neovim () {
@@ -60,7 +68,7 @@ function stow_neovim () {
     local stow_dir="$2"
     local stow_package="$3"
 
-    sudo stow -d "$nvim_install_dir" -t "$stow_dir" "$stow_package"
+    stow --no-folding -d "$nvim_install_dir" -t "$stow_dir" "$stow_package"
 }
 
 function unstow_neovim () {
@@ -68,7 +76,7 @@ function unstow_neovim () {
     local stow_dir="$2"
     local stow_package="$3"
 
-    sudo stow -D -d "$nvim_install_dir" -t "$stow_dir" "$stow_package"
+    stow --no-folding -D -d "$nvim_install_dir" -t "$stow_dir" "$stow_package"
 }
 
 ## Main ##
@@ -86,32 +94,49 @@ NVIM_DIR="${NVIM_INSTALL_DIR}/${NVIM_DIST}"
 NVIM_TARBALL="${NVIM_DIST}.tar.gz"
 NVIM_TARBALL_URL="${NVIM_TARBALL_URL:-https://github.com/neovim/neovim/releases/latest/download/${NVIM_TARBALL}}"
 
+# NVIM_DIST is also used as a directory name during replacement/removal.
+if [[ ! "$NVIM_DIST" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
+    echo_error "Invalid Neovim distribution directory: $NVIM_DIST"
+    exit 1
+fi
+if [ -L "$NVIM_DIR" ]; then
+    echo_error "Refusing to manage a symlinked Neovim package: $NVIM_DIR"
+    exit 1
+fi
+
 case "$command" in
     install)
-        if [ -d "$NVIM_DIR" ]; then
-            echo_info "Neovim is already installed"
-            if is_true "$NVIM_FORCE_INSTALL"; then
-                echo_info "Forcing re-installation"
-                unstow_neovim "$NVIM_INSTALL_DIR" "$NVIM_STOW_DIR" "$NVIM_DIST"
-                remove_neovim "$NVIM_DIR"
-            else
-                exit 0
+        mkdir -p "$NVIM_INSTALL_DIR" "$NVIM_STOW_DIR"
+        if [ -d "$NVIM_DIR" ] && ! is_true "$NVIM_FORCE_INSTALL"; then
+            if [ ! -x "$NVIM_DIR/bin/nvim" ] || [ ! -d "$NVIM_DIR/share/nvim/runtime" ]; then
+                echo_error "Incomplete Neovim package; rerun with NVIM_FORCE_INSTALL=true"
+                exit 1
             fi
+            echo_info "Neovim is already installed; ensuring links exist"
+            stow_neovim "$NVIM_INSTALL_DIR" "$NVIM_STOW_DIR" "$NVIM_DIST"
+            exit 0
         fi
 
-        download_neovim "$NVIM_TARBALL_URL" "$NVIM_INSTALL_DIR"
+        # Stage the complete download before replacing a working installation.
+        stage=$(mktemp -d "$NVIM_INSTALL_DIR/.nvim-download.XXXXXX")
+        trap 'rm -rf -- "$stage"' EXIT
+        download_neovim "$NVIM_TARBALL_URL" "$stage"
+        if [ ! -x "$stage/$NVIM_DIST/bin/nvim" ] || [ ! -d "$stage/$NVIM_DIST/share/nvim/runtime" ]; then
+            echo_error "Neovim archive is missing its executable or runtime"
+            exit 1
+        fi
+        if [ -d "$NVIM_DIR" ]; then
+            echo_info "Replacing Neovim installation"
+            unstow_neovim "$NVIM_INSTALL_DIR" "$NVIM_STOW_DIR" "$NVIM_DIST"
+            remove_neovim "$NVIM_DIR"
+        fi
+        mv -- "$stage/$NVIM_DIST" "$NVIM_DIR"
         stow_neovim "$NVIM_INSTALL_DIR" "$NVIM_STOW_DIR" "$NVIM_DIST"
         ;;
     remove)
-        unstow_neovim "$NVIM_INSTALL_DIR" "$NVIM_STOW_DIR" "$NVIM_DIST"
-        remove_neovim "$NVIM_DIR"
-        ;;
-    help)
-        usage
-        ;;
-    *)
-        echo_error "Invalid command: $command"
-        usage
-        exit 1
+        if [ -d "$NVIM_DIR" ]; then
+            unstow_neovim "$NVIM_INSTALL_DIR" "$NVIM_STOW_DIR" "$NVIM_DIST"
+            remove_neovim "$NVIM_DIR"
+        fi
         ;;
 esac
