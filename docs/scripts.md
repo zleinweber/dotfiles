@@ -1,47 +1,49 @@
-# Script interface
+# Script contract
 
-Task modules in `scripts/` expose a command-line interface, not exported shell
-functions. `setup` executes them as child processes. Keep implementation functions
-private to each script; only `common.sh` is intended to be sourced. `validate.sh`
-is a developer command with no subcommands, and recipes are sourced configuration.
+Task scripts in `scripts/` expose a command-line interface and run as child
+processes of `setup`. Their functions are private; only `common.sh` is intended
+to be sourced. `validate.sh` is a developer command without subcommands.
+Read each script for its commands, configuration, and behavior.
 
-## Public contract
+## Command-line interface
 
-- Use Bash (`#!/usr/bin/env bash`) with `set -euo pipefail`. Preserve compatibility
-  with macOS Bash 3.2 (no associative arrays or newer Bash-only syntax).
-- Support `help`, `-h`, `--help`, and no arguments: print usage to stdout and exit
-  zero, without checking dependencies, detecting architecture, downloading, or
-  modifying anything.
-- Validate the command and its argument count before side effects. Unknown commands,
-  missing operands, or extra operands print a diagnostic and usage to stderr and
-  exit nonzero. Positional operands are command-specific; there are no global flags
-  other than help.
-- Use `install` for tool installation, `remove` when removal is supported, and
-  `configure` for system configuration. Other actions should have descriptive names
-  (`bundle`, `hostname`, `upgrade`, etc.). Not every module needs every command.
-- Exit zero for success, including an already-satisfied request. Propagate failures;
-  explicitly handle expected failures locally. Do not wrap an entire operation in
-  an `if`/`!` check that suppresses Bash's `errexit` inside its functions.
-- Source `common.sh` relative to the script, so commands work from any working
-  directory. Resolve repository-owned defaults with `DOTFILES_ROOT`; explicit
-  relative path overrides are relative to the caller's directory. `setup` runs its
-  tasks from the repository root.
-- Accept configuration through environment variables named for the tool, with
-  defaults using `${VAR:-default}`. Describe public overrides in usage or nearby
-  documentation. Recipe assignments used by child scripts must be exported or
-  passed explicitly; ordinary recipe variables only exist in `setup`.
-- Use literal `true` and `false` for booleans and evaluate them with `is_true`.
-  Invalid evaluated values fail rather than being executed as shell commands.
-- Prefer convergence on reruns. Binary installers with `*_FORCE_INSTALL` default
-  to `false`; explicitly set it to `true` to reinstall/update. Package-manager
-  upgrades remain explicit commands. This does not pin upstream versions.
-- Use `echo_info`, `echo_warn`, and `echo_error` for diagnostics (stderr), controlled
-  by `VERBOSITY` (0 silent, 1 errors, 2 warnings, 3 info; default 3). Reserve stdout
-  for usage, returned values, and underlying command output.
-- Check operation-specific dependencies after argument validation. Quote paths and
-  operand arrays. Use `sudo` only for operations requiring elevated access.
+- Use `#!/usr/bin/env bash` and `set -euo pipefail`; stay compatible with macOS
+  Bash 3.2.
+- With no arguments, `help`, `-h`, or `--help`, print usage to stdout and exit
+  zero without checking dependencies or performing operations.
+- Validate commands and operand counts before side effects. Invalid input prints
+  a diagnostic and usage to stderr and exits nonzero. Use `parse_command` from
+  `common.sh` with `command:arity` declarations (`0`, `1`, or `1+`, for example).
+  There are no global flags other than help.
+- Name installation, removal, and configuration commands `install`, `remove`,
+  and `configure` where supported. Give other actions descriptive names.
+- Exit zero for success, including an already-satisfied request. Propagate
+  failures and handle expected failures locally. Avoid wrapping an entire
+  operation in `if` or `!`, which suppresses Bash's `errexit` within functions.
 
-## Minimal module
+## Configuration and execution
+
+- Source `common.sh` relative to the script so invocation works from any working
+  directory. Use `DOTFILES_ROOT` for repository-owned defaults; resolve explicit
+  relative path overrides from the caller's directory. `setup` runs tasks from
+  the repository root.
+- Accept configuration through tool-prefixed environment variables with
+  `${VAR:-default}` defaults. Describe public overrides in the script's usage.
+  Recipes must export variables needed by child scripts or pass them explicitly.
+- Use literal `true` and `false` for booleans and evaluate them with `is_true`;
+  invalid values fail.
+- Make reruns converge on the requested state. Binary installers with
+  `*_FORCE_INSTALL` default to `false`; setting it to `true` requests a reinstall
+  or update. Keep package-manager upgrades explicit.
+- Send diagnostics to stderr through `echo_info`, `echo_warn`, and `echo_error`.
+  `VERBOSITY` controls logging: 0 silent, 1 errors, 2 warnings, 3 info (default).
+  Reserve stdout for usage, returned values, and underlying command output.
+- Check operation-specific dependencies after argument validation, quote paths
+  and operand arrays, and use `sudo` only for operations requiring elevation.
+- Keep `common.sh` safe to source: it must not dispatch operations or change the
+  caller's shell options.
+
+## Minimal example
 
 ```bash
 #!/usr/bin/env bash
@@ -71,77 +73,11 @@ case "$command" in
 esac
 ```
 
-`parse_command` takes a quoted, space-separated list of `command:arity`
-declarations followed by the original argument vector. `install:0` accepts no operands, `hostname:1` takes
-exactly one, and `install:1+` takes one or more. It exits for help or invalid input,
-so the dispatcher only sees valid operations.
-
-`common.sh` also provides logging, platform/architecture detection, recipe loading,
-and sudo credential caching. Sourcing it must not dispatch an operation or change
-shell options in its caller.
+`parse_command` exits for help or invalid input, so only valid operations reach
+the dispatcher.
 
 ## Validation
 
-Run `./scripts/validate.sh` (or `just validate`) with ShellCheck installed. It checks
-syntax for each script and recipe, runs ShellCheck, and executes
-`tests/scripts.sh`. The interface tests run from outside the repository and do not
-install packages or change system configuration. They do not validate upstream
-installers or prove full platform idempotence; test those in disposable target
-machines when changing installation behavior.
-
-Validation also runs `tests/neovim.sh` with GNU Stow installed. It uses local
-fixture archives and a temporary home to test installation, link repair, failed
-downloads, replacement, conflicts, and removal without network access or sudo.
-
-## Neovim installation
-
-On Linux, `scripts/neovim.sh install` downloads the upstream archive into a
-temporary staging directory and installs it under
-`~/.local/stow/nvim-linux-<architecture>`. GNU Stow links its `bin`, `lib`, and
-`share` contents into `~/.local`; the executable is `~/.local/bin/nvim`. No sudo
-is used. The shared Zsh configuration puts `~/.local/bin` first on PATH; other
-shells need the same PATH entry.
-
-Rerunning install repairs missing links without downloading again. Set
-`NVIM_FORCE_INSTALL=true` to fetch and replace the package. Downloads must finish
-and contain the executable and runtime before replacing an existing installation.
-This is not a fully transactional upgrade: a subsequent filesystem or Stow failure
-can still require rerunning install. `remove` unlinks the package and deletes its
-installation directory, leaving unrelated files alone.
-
-`NVIM_INSTALL_DIR` and `NVIM_STOW_DIR` can select other writable package and
-target directories. Existing `/opt` installations are not migrated or deleted
-automatically. After verifying the new user installation, an old default system
-installation can be explicitly removed with:
-
-```sh
-sudo env NVIM_INSTALL_DIR=/opt NVIM_STOW_DIR=/usr/local ./scripts/neovim.sh remove
-```
-
-Use the old `NVIM_DIST` override too if that installation used a nondefault
-distribution name. Do not run the whole setup as root. Open a new Zsh session
-after updating the shell configuration, or add `~/.local/bin` to the current PATH.
-
-## Codex installation
-
-`scripts/codex.sh install` downloads the standalone Codex binary from the latest
-official GitHub release and installs it as `~/.local/bin/codex`, without Node,
-npm, or sudo. It selects the Linux musl or macOS archive for x86_64 or arm64.
-The shared Zsh configuration already includes `~/.local/bin` on PATH.
-
-An executable at the destination or a `codex` command already on PATH is left
-alone by default. Set `CODEX_FORCE_INSTALL=true` to download again and replace
-the configured destination. Other installations elsewhere on PATH are not
-removed. `CODEX_INSTALL_DIR` overrides the writable destination directory, and
-`CODEX_TARBALL_URL` can select a pinned release URL or a mirror containing the
-expected platform-specific archive member.
-
-Downloads and extraction complete in a temporary directory on the destination
-filesystem before the executable is atomically replaced. Failures preserve the
-existing executable and clean up staging files. Downloads use HTTPS with curl's
-normal TLS verification; this installer does not independently verify release
-checksums or signatures. The default latest-release URL is not version-pinned.
-
-Validation runs `tests/codex.sh` with local fixture archives to cover platform
-selection, reruns, overrides, failed downloads, corrupt/incomplete archives,
-replacement, and conflicting destinations without running npm or sudo.
+Run `./scripts/validate.sh` (or `just validate`) to check shell syntax, ShellCheck,
+and the test suite. Installation changes also need testing on disposable target
+machines; interface checks alone do not establish platform support or idempotence.
