@@ -123,6 +123,12 @@ if is_true "${SETUP_ATUIN}"; then
     ./scripts/atuin.sh install
 fi
 
+# glow
+if is_true "${SETUP_GLOW:-false}"; then
+    echo_info "Installing glow"
+    ./scripts/glow.sh install
+fi
+
 # lazygit
 if is_true "${SETUP_LAZYGIT}"; then
     echo_info "Installing lazygit"
