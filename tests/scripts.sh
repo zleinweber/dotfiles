@@ -56,7 +56,7 @@ if CALL_LOG="$fixture/calls" PATH="$fixture/bin:$PATH" bash "$root/scripts/apt.s
 fi
 [[ "$(cat "$fixture/calls")" == 'apt-get update' ]]
 # Existing binaries are skipped by default without downloading or using sudo.
-for pair in 'lazygit LAZYGIT lazygit' 'ripgrep RIPGREP rg' 'tree-sitter-cli TREE_SITTER_CLI tree-sitter' 'yq YQ yq'; do
+for pair in 'glow GLOW glow' 'lazygit LAZYGIT lazygit' 'ripgrep RIPGREP rg' 'tree-sitter-cli TREE_SITTER_CLI tree-sitter' 'yq YQ yq'; do
     read -r script prefix binary <<< "$pair"
     touch "$fixture/bin/$binary"
     chmod +x "$fixture/bin/$binary"

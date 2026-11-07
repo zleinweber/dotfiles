@@ -24,6 +24,9 @@ SETUP_CODEX_CLI=false
 # codespaces
 SETUP_CODESPACES_SYSTEM=false
 
+# glow
+SETUP_GLOW=false
+
 # hashicorp
 SETUP_HASHI_APT_REPO=false
 

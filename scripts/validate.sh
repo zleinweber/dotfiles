@@ -14,3 +14,4 @@ fi
 bash tests/scripts.sh
 bash tests/neovim.sh
 bash tests/codex.sh
+bash tests/glow.sh
